@@ -1,6 +1,6 @@
 # Kubernetes
 
-<img src="https://cncf-branding.netlify.app/img/projects/kubernetes/stacked/color/kubernetes-stacked-color.png" style="max-width:250px;"/>
+<img src="https://upload.wikimedia.org/wikipedia/labs/thumb/b/ba/Kubernetes-icon-color.svg/2110px-Kubernetes-icon-color.svg.png" width="150"/>
 
 # O que é o Kubernets
 
