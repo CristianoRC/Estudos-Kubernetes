@@ -48,7 +48,7 @@ Na prática, o k8s precisa de um container engine e um container runtime, e cai 
 
 ### Deployment
 
-Toda a configuração dos pods são feitas através deste controlador, intancias, imagens...
+Toda a configuração dos pods são feitas através deste controlador, instancias, imagens...
 
 ### ReplicaSet
 
@@ -64,15 +64,14 @@ Ferramenta que facilita o acesso de serviços externos ao nosso nó/cluster, ele
 
 **Cluster IP:** esse é o padrão, onde você tem um Ip(fixo) para o cluster, e tudo passa por ali, não existe a possibilidade de chamar um Pod/nó diretamente. O importante é que você só consegue acesso se você estiver dentro do cluster, só para comunicação interna.
 
-**Node Port:** aqui te da acesso direto a rede do teu serviço, direto no nó, não é muito bom usar isso no ambiente de  produção, aqui tu já consegue ter acesso usando um serviço externo ao cluster. Quando se tem mais de um nó, aí já se torna problematico, porque você tem que saber o ip de todos... aí para isso temos a próxima solução.
+**Node Port:** aqui te da acesso direto a rede do teu serviço, direto no nó, não é muito bom usar isso no ambiente de produção, aqui tu já consegue ter acesso usando um serviço externo ao cluster. Quando se tem mais de um nó, aí já se torna problematico, porque você tem que saber o ip de todos... aí para isso temos a próxima solução.
 
 **Load Balancer:** distribui as cargas entre os nós, diferentemente do Node Port onde você chama um nó especificamente, aqui você chama o balancer e ele se vira para redirecionar para o melhor nó.
 
-
 ![-](https://i.stack.imgur.com/1lunW.png)
-
-
 
 ### Ingress
 
+Quando se tem mais de um service, você pode usar o ingress, pois ele é uma camada acima dos serviços, é como se fosse um proxy reverso para os services.
 
+![-](./images/ingress.png)
