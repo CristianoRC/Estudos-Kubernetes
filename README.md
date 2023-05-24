@@ -1,26 +1,30 @@
 # Kubernetes
 
+<img src="https://cncf-branding.netlify.app/img/projects/kubernetes/stacked/color/kubernetes-stacked-color.png" style="max-width:250px;"/>
+
 # O que é o Kubernets
 
 Também conhecido como ks8, é uma plataforma de orquestração de container, com o seu principal foco na escalabilidade dentro de clusters.
 
 ## Estrutura
 
-![-](./images/estrutura.png)
+![-](./images/arquitetura.png)
 
 ### Kubelet
 
 Responsável por saber o que está acontecendo em cada nó(cada servidor do seu cluster), ele é o responsável por falar com o containerd, que por sua vez fala com o runc. No final das contas ele é como se fosse um Docker.
 
-![-](./images/arquitetura.png)
-
 ### Kube-proxy
-Proxy que fica dentor do nó responsável pela comunicação com o cluster Kubernetes.
 
+Proxy que fica dentor do nó responsável pela comunicação com o cluster Kubernetes.
 
 ### Workers
 
 Sãos os nós que executam os containers
+
+### Pods
+
+Não podemos falar que o worker executa um container, no k8s, a menor unidade se chama **pod**, dentro dele pode ter um ou mais container.
 
 ### Control Plane
 
@@ -37,3 +41,5 @@ Sãos os nós que executam os containers
 ### Estrutura por debaixo dos panos - containerd / runc
 
 Na prática, o k8s precisa de um container engine e um container runtime, e cai na treta de são suportar Docker, na prática o Docker tem muita coisa que o ks8 não precisa, então ele usa o container runtime [containerd](https://containerd.io/), que é a mesma coisa que o Docker usa no final das contas. Obs. tem conceitos de container runtime de baixo e alto nível, o containerd é de alto, e existe o runc que é o de baixo nível, responsável por falar com o kernel.
+
+![-](./images/estrutura.png)
