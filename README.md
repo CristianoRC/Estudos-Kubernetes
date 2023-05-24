@@ -43,3 +43,36 @@ Não podemos falar que o worker executa um container, no k8s, a menor unidade se
 Na prática, o k8s precisa de um container engine e um container runtime, e cai na treta de são suportar Docker, na prática o Docker tem muita coisa que o ks8 não precisa, então ele usa o container runtime [containerd](https://containerd.io/), que é a mesma coisa que o Docker usa no final das contas. Obs. tem conceitos de container runtime de baixo e alto nível, o containerd é de alto, e existe o runc que é o de baixo nível, responsável por falar com o kernel.
 
 ![-](./images/estrutura.png)
+
+## Conceitos
+
+### Deployment
+
+Toda a configuração dos pods são feitas através deste controlador, intancias, imagens...
+
+### ReplicaSet
+
+Responsável por garantir a quantidade de pods em execução.
+
+![-](https://storage.googleapis.com/cdn.thenewstack.io/media/2017/11/07751442-deployment.png)
+
+### Services
+
+Ferramenta que facilita o acesso de serviços externos ao nosso nó/cluster, ele fica como se fosse um load balance.
+
+![-](./images/services.png)
+
+**Cluster IP:** esse é o padrão, onde você tem um Ip(fixo) para o cluster, e tudo passa por ali, não existe a possibilidade de chamar um Pod/nó diretamente. O importante é que você só consegue acesso se você estiver dentro do cluster, só para comunicação interna.
+
+**Node Port:** aqui te da acesso direto a rede do teu serviço, direto no nó, não é muito bom usar isso no ambiente de  produção, aqui tu já consegue ter acesso usando um serviço externo ao cluster. Quando se tem mais de um nó, aí já se torna problematico, porque você tem que saber o ip de todos... aí para isso temos a próxima solução.
+
+**Load Balancer:** distribui as cargas entre os nós, diferentemente do Node Port onde você chama um nó especificamente, aqui você chama o balancer e ele se vira para redirecionar para o melhor nó.
+
+
+![-](https://i.stack.imgur.com/1lunW.png)
+
+
+
+### Ingress
+
+
