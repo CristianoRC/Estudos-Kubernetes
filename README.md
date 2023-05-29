@@ -131,3 +131,33 @@ Com a parte de deployment, se eu deletar um pod, ou eke _crashar_, o k8s já sob
 - Escalando meu deployment: `kubectl scale deployment servidor-web --replicas 5`. Para "desescalar", só rodar o comando novamente mudando o numero de replicas.
 
 A parte de escala a gente faz de forma automática em produção, com ferramentas como o Keda e outras metricas de requests, infra...
+
+#### Services
+
+- Criando nosso deployment: `kubectl create deployment --image nginx --dry-run -oyaml servidor-web > servidor-web.yaml`
+
+- Rodando: `kubectl apply -f servidor-web.yaml`
+
+- Criar pod para testar comunicação: `kubectl run --image alpine -it ping sh`; Instala também o curl: `apk add curl`
+
+Se eu pegar o ip usando `kubectl get pods -owide` eu até consigo chamar direto, mas esses ips mudam toda hora, e o nome também, pois podemos ter vários pods expalhados em vários nós, e como expliquei anteriormente, para resolver esse problema nós usamos o services.
+
+**Criação de um service**
+
+`kubectl expose deployment servidor-web --port 80 --target-port 80`
+
+- Port: qual porta o nosso service(load balancer) vai escutar
+- Target Port: a porta em que a chamada vai ser redirecionada na instancia(porta do container).
+
+Esse cara também daria para ser criado via yaml.
+
+- Listagem dos services: `kubectl get service`. Aqui você tem o ip "fixo" do cluster
+
+- Obter o yaml depois de criado: `kubectl get service servidor-web -oyaml`
+
+Dentro desse yaml ele tem a questão das labels, que é a forma que o service sua para saber para qual containers ele pode redirecionar as cargas! Para ver quais containers tem essas labels, só rodar `kubectl get pod --show-labels`.
+Para obetr todos os pods que estão respondendo para esse service, roda o comando `kubectl get endpoints servidor-web`
+
+Para fazer o teste de um pod chamando o outro, dentro do pod do alpine que rodou de modo "it", só chamar um `curl servidor-web`
+
+Isso aqui tem que tomar cuidado, pois se o service estiver em outra namespace você precisa passar o nome completo, mas preciso estudar mais sobre o assunto para trazer o exemplo.
