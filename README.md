@@ -58,7 +58,7 @@ Responsável por garantir a quantidade de pods em execução.
 
 ### Services
 
-Ferramenta que facilita o acesso de serviços externos ao nosso nó/cluster, ele fica como se fosse um load balancer. 
+Ferramenta que facilita o acesso de serviços externos ao nosso nó/cluster, ele fica como se fosse um load balancer.
 
 ![-](./images/services.png)
 
@@ -83,6 +83,7 @@ E você pode também aninhar várias coisas, você pode ter de baixo desse proxy
 ## Ferramentas
 
 ### Criação de um cluster
+
 Dicas de ferramentas que você pode usar em usa máquina local para fazer testes com k8S.
 
 - [Play with Kubernetes](https://labs.play-with-k8s.com/): Ferramenta online e gratuita para brincar com k8s, mas com limitação de até 4hrs, após isso ela apaga tudo e você precisa iniciar do zero.
@@ -93,10 +94,23 @@ Dicas de ferramentas que você pode usar em usa máquina local para fazer testes
 
 - [K3S](https://k3s.io/)
 
+Para iniciar um cluster com o kind, basta rodar o seguinte comando: `kind create cluster --config config.yaml`. O arquivo de config você pode baixar aqui -> [00-Yaml Basico](./00-Yaml%20Basico/)
+
+Para deletar o cluster: `kind delete cluster`
+
+
 ### Kubctl
 
 Essa é a ferramenta de linha de comando que geralmente é usada para comunicação com o cluster. [Como Install o kubctl.](https://pwittrock.github.io/docs/tasks/tools/install-kubectl/)
 
 - Listar todos os pods: `kubectl get pod -A -owide`
 
-- Listar todos os nodes: `kubeclt get node`
+- Listar todos os nodes: `kubectl get node`
+
+- Criação de um pod: `kubectl run --image nginx servidor-web`
+
+- Geração de um script yaml: `kubectl run --image nginx --dry-run=client -oyaml servidor-web`
+
+- criar pod usando Yaml: `kubectl apply -f pod.yaml`
+
+- Deletar um pod: `kubectl delete pod servidor-web`
