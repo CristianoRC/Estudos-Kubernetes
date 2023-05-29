@@ -172,9 +172,9 @@ Um exemplo mais comum para quem é dev. é o KEDA(Kubernetes-based event driver 
 
 ![-](https://learn.microsoft.com/pt-br/azure/aks/media/keda/architecture.png)
 
-#### Tipos de operators
+#### Níveis de operators
 
-Dentro dos operadores podemos dividir eles em 5 tipos.
+Dentro dos operadores podemos dividir eles em 5 níveis.
 
 ![-](https://sdk.operatorframework.io/operator-capability-level.png)
 
