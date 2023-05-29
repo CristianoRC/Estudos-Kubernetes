@@ -98,10 +98,11 @@ Para iniciar um cluster com o kind, basta rodar o seguinte comando: `kind create
 
 Para deletar o cluster: `kind delete cluster`
 
-
 ### Kubctl
 
 Essa é a ferramenta de linha de comando que geralmente é usada para comunicação com o cluster. [Como Install o kubctl.](https://pwittrock.github.io/docs/tasks/tools/install-kubectl/)
+
+#### Trabalhando com Pods
 
 - Listar todos os pods: `kubectl get pod -A -owide`
 
@@ -114,3 +115,5 @@ Essa é a ferramenta de linha de comando que geralmente é usada para comunicaç
 - criar pod usando Yaml: `kubectl apply -f pod.yaml`
 
 - Deletar um pod: `kubectl delete pod servidor-web`
+
+#### Deployment
