@@ -161,3 +161,21 @@ Para obetr todos os pods que estão respondendo para esse service, roda o comand
 Para fazer o teste de um pod chamando o outro, dentro do pod do alpine que rodou de modo "it", só chamar um `curl servidor-web`
 
 Isso aqui tem que tomar cuidado, pois se o service estiver em outra namespace você precisa passar o nome completo, mas preciso estudar mais sobre o assunto para trazer o exemplo.
+
+### Operators
+
+Na prática, é um tipo de aplicação que qualquer um pode escrever e plugar no cluster Kubernets, e essa aplicação consegue ver e executar ações no seu cluster.
+
+![-](https://miro.medium.com/v2/resize:fit:1400/1*tF3P0T5Y4v6W69YYRXB2dQ.png)
+
+Um exemplo mais comum para quem é dev. é o KEDA(Kubernetes-based event driver autoscaler), que seu papel é basicamente ficar observando as filas/topicos e decidir quando escalar ou desescalar instâncias dos consumidores, só que ao invés de você criar essas dentro da sua aplicação, ou escalar na mão, existe um app, um operator que faz esse trabalho para você.
+
+![-](https://learn.microsoft.com/pt-br/azure/aks/media/keda/architecture.png)
+
+#### Tipos de operators
+
+Dentro dos operadores podemos dividir eles em 5 tipos.
+
+![-](https://sdk.operatorframework.io/operator-capability-level.png)
+
+Uma lista com os principais operators você pode encontrar no [operatorhub.io](https://operatorhub.io/)
