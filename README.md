@@ -117,3 +117,17 @@ Essa é a ferramenta de linha de comando que geralmente é usada para comunicaç
 - Deletar um pod: `kubectl delete pod servidor-web`
 
 #### Deployment
+
+Com a parte de deployment, se eu deletar um pod, ou eke _crashar_, o k8s já sobre uma outra instância na hora.
+
+- Criação de um deployment: `kubectl create deployment --image nginx servidor-web`
+
+- Listar deployments: `kubectl get deployment`
+
+- Listar replicasets: `kubectl get replicaset`
+
+- Deletar um deploy: `kubectl delete deploy servidor-web`
+
+- Escalando meu deployment: `kubectl scale deployment servidor-web --replicas 5`. Para "desescalar", só rodar o comando novamente mudando o numero de replicas.
+
+A parte de escala a gente faz de forma automática em produção, com ferramentas como o Keda e outras metricas de requests, infra...
