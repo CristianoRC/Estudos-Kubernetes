@@ -36,7 +36,7 @@ Não podemos falar que o worker executa um container, no k8s, a menor unidade se
 
 **Controller Manager:** verifica a integridade dos nós, para garantir que está tudo no ar com a quantidade de instancias definidas. Se não tiver ele se encarrega de ajustar.
 
-**API Server:** ele é a porta de entrada, todo mundo comunica com ele, e ele chama os outros serviços.
+**API Server:** ele é a porta de entrada, todo mundo comunica com ele, e ele chama os outros serviços, e ele é realmente uma API http, as ferramenats como o kubectl apenas pegam os dados dessas chamadas http e mostram de uma forma mais fácil de se ler e trabalhar.
 
 ### Estrutura por debaixo dos panos - containerd / runc
 
@@ -82,6 +82,7 @@ E você pode também aninhar várias coisas, você pode ter de baixo desse proxy
 
 ## Ferramentas
 
+### Criação de um cluster
 Dicas de ferramentas que você pode usar em usa máquina local para fazer testes com k8S.
 
 - [Play with Kubernetes](https://labs.play-with-k8s.com/): Ferramenta online e gratuita para brincar com k8s, mas com limitação de até 4hrs, após isso ela apaga tudo e você precisa iniciar do zero.
@@ -91,3 +92,11 @@ Dicas de ferramentas que você pode usar em usa máquina local para fazer testes
 - [Minikube](https://minikube.sigs.k8s.io/docs/start/)
 
 - [K3S](https://k3s.io/)
+
+### Kubctl
+
+Essa é a ferramenta de linha de comando que geralmente é usada para comunicação com o cluster. [Como Install o kubctl.](https://pwittrock.github.io/docs/tasks/tools/install-kubectl/)
+
+- Listar todos os pods: `kubectl get pod -A -owide`
+
+- Listar todos os nodes: `kubeclt get node`
