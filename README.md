@@ -77,3 +77,17 @@ Quando se tem mais de um service, você pode usar o ingress, pois ele é uma cam
 ![-](./images/ingress.png)
 
 E você pode também aninhar várias coisas, você pode ter de baixo desse proxy reverso(ingress) um API Gatway, ou outros serviços, até conseguir chegar no seu Pod.
+
+---
+
+## Ferramentas
+
+Dicas de ferramentas que você pode usar em usa máquina local para fazer testes com k8S.
+
+- [Play with Kubernetes](https://labs.play-with-k8s.com/): Ferramenta online e gratuita para brincar com k8s, mas com limitação de até 4hrs, após isso ela apaga tudo e você precisa iniciar do zero.
+
+- [Kind](https://kind.sigs.k8s.io/): ideal para rodar em uma maquina local
+
+- [Minikube](https://minikube.sigs.k8s.io/docs/start/)
+
+- [K3S](https://k3s.io/)
