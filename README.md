@@ -16,7 +16,7 @@ Responsável por saber o que está acontecendo em cada nó(cada servidor do seu 
 
 ### Kube-proxy
 
-Proxy que fica dentor do nó responsável pela comunicação com o cluster Kubernetes.
+Facilita a comunicação entre os componentes do Kubernetes, garantindo que as requisições sejam roteadas corretamente para os pods certos. 
 
 ### Workers
 
