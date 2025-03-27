@@ -118,7 +118,7 @@ Essa é a ferramenta de linha de comando que geralmente é usada para comunicaç
 
 #### Deployment
 
-Com a parte de deployment, se eu deletar um pod, ou eke _crashar_, o k8s já sobre uma outra instância na hora.
+Com a parte de deployment, se eu deletar um pod, ou ele _crashar_, o k8s já sobre uma outra instância na hora.
 
 - Criação de um deployment: `kubectl create deployment --image nginx servidor-web`
 
