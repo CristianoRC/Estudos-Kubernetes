@@ -10,6 +10,9 @@ spec:
   - image: nginx
     name: servidor-web
     resources: {}
+    ports:
+    - containerPort: 80
+      protocol: TCP
   dnsPolicy: ClusterFirst
   restartPolicy: Always
 status: {}
