@@ -78,6 +78,16 @@ Quando se tem mais de um service, você pode usar o ingress, pois ele é uma cam
 
 E você pode também aninhar várias coisas, você pode ter de baixo desse proxy reverso(ingress) um API Gatway, ou outros serviços, até conseguir chegar no seu Pod.
 
+
+### Namespace
+
+Server como um espaço logico de separação dos recursos, ajudando a organizar, e controlar os acessos. Muito comum para separar por aplicações, ou até mesmo por ambientes(homologação, produção, ...), o que não é o ideal, pois teremos ambientes não produtivos impactando produção em alguns momentos.
+
+Por padrão se não for informado, ao criar um novo pod ele sempre será criado no **namespace defaut**.
+
+![-](./images/namespaces.svg)
+
+
 ---
 
 ## Ferramentas
