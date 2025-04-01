@@ -83,9 +83,13 @@ E você pode também aninhar várias coisas, você pode ter de baixo desse proxy
 
 Server como um espaço logico de separação dos recursos, ajudando a organizar, e controlar os acessos. Muito comum para separar por aplicações, ou até mesmo por ambientes(homologação, produção, ...), o que não é o ideal, pois teremos ambientes não produtivos impactando produção em alguns momentos.
 
-Por padrão se não for informado, ao criar um novo pod ele sempre será criado no **namespace defaut**.
-
 ![-](./images/namespaces.svg)
+
+Por padrão se não for informado, ao criar um novo pod ele sempre será criado no **namespace defaut**, mas tamb;em temos alguns outros que são criados:
+
+- kube-system: usado para administração do cluster, API Server, Control Pane...
+- kube-public: armazena informações visíveis publicamente a todos os usuários do cluster
+- kube-node-lease: contém objetos de lease para cada nó, usados para monitorar disponibilidade
 
 
 ---
@@ -171,6 +175,22 @@ Para obetr todos os pods que estão respondendo para esse service, roda o comand
 Para fazer o teste de um pod chamando o outro, dentro do pod do alpine que rodou de modo "it", só chamar um `curl servidor-web`
 
 Isso aqui tem que tomar cuidado, pois se o service estiver em outra namespace você precisa passar o nome completo, mas preciso estudar mais sobre o assunto para trazer o exemplo.
+
+#### Namespaces 
+
+- Listar namespaces: `kubectl get namespaces` ou `kubectl get ns`
+- Listar pods de um namespace:  `kubectl get pod -n {namespace-name}`
+- Criar um novo namespace: `kubectl create namespace {namespace-name}`
+- Deletar um namespace: `kubectl delete namespace {namespace-name}`
+
+A criação também podemos fazer com um YAML
+
+- Para gerar o YAML da criação: `kubectl create ns {namespace-name} --dry-run -o yaml`
+    - `kubectl create ns example --dry-run -o yaml | kubectl neat > namespace-example.yaml`
+    - kubectl neate: precisa ser instalado a parte e serve para limpar manifestos YAML, removendo campos desnecessários e metadados gerados automaticamente pelo sistema. `kubectl krew install neat`
+- Criar usando o YAML: `kubectl apply -f namespace-example.yaml`
+
+
 
 ### Operators
 
