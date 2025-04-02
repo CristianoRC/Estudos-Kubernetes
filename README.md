@@ -25,6 +25,7 @@ Sãos os nós que executam os containers
 ### Pods
 
 Não podemos falar que o worker executa um container, no k8s, a menor unidade se chama **pod**, dentro dele pode ter um ou mais container.
+Um exemplo de uso de pod com mais de um container, é a ideia de sidecar.
 
 ### Control Plane
 
