@@ -194,6 +194,15 @@ A criação também podemos fazer com um YAML
 - Criar usando o YAML: `kubectl apply -f namespace-example.yaml`
 
 
+#### Logs
+
+- Listar os logs de um pod: `kubectl logs -n {namespace-name} {pod-name}`
+- Seguir logs em tempo real: `kubectl logs -n {namespace-name} {pod-name} -f`
+- Ver logs das últimas X linhas: `kubectl logs -n {namespace-name} {pod-name} --tail={quantidade}`
+- Ver logs de um container específico em um pod: `kubectl logs -n {namespace-name} {pod-name} -c {container-name}`
+- Ver logs com timestamp: `kubectl logs -n {namespace-name} {pod-name} --timestamps=true`
+- Ver logs desde um determinado momento: `kubectl logs -n {namespace-name} {pod-name} --since=1h` (suporta s, m, h)
+
 
 ### Operators
 
