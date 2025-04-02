@@ -127,6 +127,8 @@ Essa é a ferramenta de linha de comando que geralmente é usada para comunicaç
 
 - Criação de um pod: `kubectl run --image nginx servidor-web`
 
+- Criar um pod interativo: `kubectl run --image alpine --rm -it it-demo sh`
+
 - Geração de um script yaml: `kubectl run --image nginx --dry-run=client -oyaml servidor-web`
 
 - criar pod usando Yaml: `kubectl apply -f pod.yaml`
