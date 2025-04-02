@@ -16,7 +16,7 @@ Responsável por saber o que está acontecendo em cada nó(cada servidor do seu 
 
 ### Kube-proxy
 
-Facilita a comunicação entre os componentes do Kubernetes, garantindo que as requisições sejam roteadas corretamente para os pods certos. 
+Facilita a comunicação entre os componentes do Kubernetes, garantindo que as requisições sejam roteadas corretamente para os pods certos.
 
 ### Workers
 
@@ -26,6 +26,8 @@ Sãos os nós que executam os containers
 
 Não podemos falar que o worker executa um container, no k8s, a menor unidade se chama **pod**, dentro dele pode ter um ou mais container.
 Um exemplo de uso de pod com mais de um container, é a ideia de sidecar.
+
+Outro ponto importante, é que eles tem um namespace de rede compartilhado entre eles, então eles conseguem se comunicar via localhost.
 
 ### Control Plane
 
