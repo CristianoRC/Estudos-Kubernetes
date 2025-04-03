@@ -135,6 +135,8 @@ Essa é a ferramenta de linha de comando que geralmente é usada para comunicaç
 
 - Deletar um pod: `kubectl delete pod servidor-web`
 
+Obs.: esses comandos devem ser usados apenas para testes, pois, todo o controle em produção deve ser feio via Deployment.
+
 #### Deployment
 
 Com a parte de deployment, se eu deletar um pod, ou ele _crashar_, o k8s já sobre uma outra instância na hora.
