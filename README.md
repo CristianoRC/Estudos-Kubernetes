@@ -8,7 +8,7 @@ Também conhecido como ks8, é uma plataforma de orquestração de container, co
 
 ## Estrutura
 
-![-](./images/arquitetura.png)
+<img src="./images/arquitetura.png" width="750"/>
 
 ### Kubelet
 
@@ -45,7 +45,7 @@ Outro ponto importante, é que eles tem um namespace de rede compartilhado entre
 
 Na prática, o k8s precisa de um container engine e um container runtime, e cai na treta de são suportar Docker, na prática o Docker tem muita coisa que o ks8 não precisa, então ele usa o container runtime [containerd](https://containerd.io/), que é a mesma coisa que o Docker usa no final das contas. Obs. tem conceitos de container runtime de baixo e alto nível, o containerd é de alto, e existe o runc que é o de baixo nível, responsável por falar com o kernel.
 
-![-](./images/estrutura.png)
+<img src="./images/estrutura.png" width="750"/>
 
 ## Conceitos
 
@@ -57,13 +57,13 @@ Toda a configuração dos pods são feitas através deste controlador, instancia
 
 Responsável por garantir a quantidade de pods em execução.
 
-![-](https://storage.googleapis.com/cdn.thenewstack.io/media/2017/11/07751442-deployment.png)
+<img src="https://storage.googleapis.com/cdn.thenewstack.io/media/2017/11/07751442-deployment.png" width="600"/>
 
 ### Services
 
 Ferramenta que facilita o acesso de serviços externos ao nosso nó/cluster, ele fica como se fosse um load balancer.
 
-![-](./images/services.png)
+<img src="./images/services.png" width="650"/>
 
 **Cluster IP:** esse é o padrão, onde você tem um Ip(fixo) para o cluster, e tudo passa por ali, não existe a possibilidade de chamar um Pod/nó diretamente. O importante é que você só consegue acesso se você estiver dentro do cluster, só para comunicação interna.
 
@@ -71,13 +71,15 @@ Ferramenta que facilita o acesso de serviços externos ao nosso nó/cluster, ele
 
 **Load Balancer:** distribui as cargas entre os nós, diferentemente do Node Port onde você chama um nó especificamente, aqui você chama o balancer e ele se vira para redirecionar para o melhor nó. Importante, isso precisa ser implementado ou instalado, porque geralmente quem oferece esse tipo de service são os serviços de cloud provider.
 
-![-](https://i.stack.imgur.com/1lunW.png)
+<img src="https://i.stack.imgur.com/1lunW.png" width="750"/>
+
 
 ### Ingress
 
 Quando se tem mais de um service, você pode usar o ingress, pois ele é uma camada acima dos serviços, é como se fosse um proxy reverso para os services, e esse cara pode ser até mesmo um Nginx, aí cada rota ou sub-dominio pode ser recdirecioando para o seu respectivo "service"
 
-![-](./images/ingress.png)
+<img src="./images/ingress.png" width="700"/>
+
 
 E você pode também aninhar várias coisas, você pode ter de baixo desse proxy reverso(ingress) um API Gatway, ou outros serviços, até conseguir chegar no seu Pod.
 
@@ -86,7 +88,7 @@ E você pode também aninhar várias coisas, você pode ter de baixo desse proxy
 
 Server como um espaço logico de separação dos recursos, ajudando a organizar, e controlar os acessos. Muito comum para separar por aplicações, ou até mesmo por ambientes(homologação, produção, ...), o que não é o ideal, pois teremos ambientes não produtivos impactando produção em alguns momentos.
 
-![-](./images/namespaces.svg)
+<img src="./images/namespaces.svg" width="750"/>
 
 Por padrão se não for informado, ao criar um novo pod ele sempre será criado no **namespace defaut**, mas tamb;em temos alguns outros que são criados:
 
@@ -94,6 +96,17 @@ Por padrão se não for informado, ao criar um novo pod ele sempre será criado 
 - kube-public: armazena informações visíveis publicamente a todos os usuários do cluster
 - kube-node-lease: contém objetos de lease para cada nó, usados para monitorar disponibilidade
 
+
+### Init Conainers
+
+Containers que executam antes do container principal do pod, garantindo pré-requisitos.
+- Completam totalmente antes dos containers principais iniciarem
+- Preparam o ambiente para a aplicação principal
+- Configuram dependências, inicializam dados
+- Verificam disponibilidade de serviços externos
+- Executam em sequência, um após o outro
+
+<img src="./images/init-containers.svg" width="650"/>
 
 ---
 
