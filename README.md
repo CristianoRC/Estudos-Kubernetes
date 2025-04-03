@@ -108,6 +108,13 @@ Containers que executam antes do container principal do pod, garantindo pré-req
 
 <img src="./images/init-containers.svg" width="650"/>
 
+Para testar o conceito de Init Containers na prática, explore o exemplo em [init-container-simples.yaml](./init-container-simples.yaml), que demonstra um Init Container que aguarda 60 segundos e gera conteúdo para um servidor web nginx. Execute com:
+
+```bash
+kubectl apply -f init-container-simples.yaml
+kubectl get pods -w   # Observe o estado "Init" por 40 segundos
+```
+
 ---
 
 ## Ferramentas

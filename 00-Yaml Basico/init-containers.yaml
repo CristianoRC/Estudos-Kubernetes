@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: exemplo-init-container
+  labels:
+    app: demo-init
+spec:
+  # Volume compartilhado entre init container e container principal
+  volumes:
+    - name: dados-compartilhados
+      emptyDir: {}
+  
+  # Init Containers executam antes do container principal
+  initContainers:
+    # Cria um arquivo HTML com uma mensagem no volume compartilhado
+    - name: gerador-conteudo
+      image: busybox:1.28
+      command: ['sh', '-c', 'echo "Aguardando 40 segundos para demonstrar o conceito..."; sleep 40; echo "<html><body><h1>Conteúdo criado pelo Init Container</h1><p>$(date)</p></body></html>" > /dados/index.html; echo "Arquivo criado com sucesso!"']
+      volumeMounts:
+        - name: dados-compartilhados
+          mountPath: /dados
+  
+  # Container principal que usa o arquivo criado pelo init container
+  containers:
+    - name: servidor-web
+      image: nginx:alpine
+      ports:
+        - containerPort: 80
+      volumeMounts:
+        - name: dados-compartilhados
+          mountPath: /usr/share/nginx/html
+      # Configurações básicas para executar o nginx
+      resources:
+        limits:
+          memory: "64Mi"
+          cpu: "100m"
