@@ -126,14 +126,13 @@ Dicas de ferramentas que você pode usar em usa máquina local para fazer testes
 - [Play with Kubernetes](https://labs.play-with-k8s.com/): Ferramenta online e gratuita para brincar com k8s, mas com limitação de até 4hrs, após isso ela apaga tudo e você precisa iniciar do zero.
 
 - [Kind](https://kind.sigs.k8s.io/): ideal para rodar em uma maquina local
+  - Para instruções detalhadas sobre como configurar e rodar clusters com Kind, consulte o [readme sobre como usar o Kind](./cluster-kind/README.md)
 
 - [Minikube](https://minikube.sigs.k8s.io/docs/start/)
 
 - [K3S](https://k3s.io/)
 
-Para iniciar um cluster com o kind, basta rodar o seguinte comando: `kind create cluster --config config.yaml`. O arquivo de config você pode baixar aqui -> [00-Yaml Basico](./00-Yaml%20Basico/)
 
-Para deletar o cluster: `kind delete cluster`
 
 ### Kubctl
 
