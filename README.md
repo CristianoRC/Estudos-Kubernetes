@@ -115,6 +115,20 @@ kubectl apply -f init-containers.yaml
 kubectl get pods -w   # Observe o estado "Init" por 40 segundos
 ```
 
+### Multi-Container Pods
+
+Pods podem conter mais de um container, compartilhando recursos como volumes e rede.
+- Todos os containers no pod compartilham o mesmo IP e namespace de rede
+- Containers podem se comunicar via localhost
+- Compartilham o mesmo ciclo de vida (criados e destruídos juntos)
+
+Para testar o conceito de Multi-Container Pods na prática, explore o exemplo em [templates/multi-container-pod.yaml](./templates/multi-container-pod.yaml), que demonstra três containers compartilhando um volume. Execute com:
+
+```bash
+kubectl apply -f templates/multi-container-pod.yaml
+kubectl logs multi-container-pod -c container-monitor  # Veja logs do container específico
+```
+
 ---
 
 ## Ferramentas
