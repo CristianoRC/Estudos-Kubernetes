@@ -29,6 +29,18 @@ Um exemplo de uso de pod com mais de um container, é a ideia de sidecar.
 
 Outro ponto importante, é que eles tem um namespace de rede compartilhado entre eles, então eles conseguem se comunicar via localhost.
 
+#### Ciclo de vida
+
+ <img src="./images/lifecycle.svg" width="700"/>
+
+O ciclo de vida de um Pod no Kubernetes passa por diferentes estados:
+1. **Pending**: O pod foi aceito pelo cluster, mas um ou mais containers ainda não estão prontos para execução
+2. **Running**: Todos os containers foram criados e pelo menos um está em execução
+3. **Succeeded**: Todos os containers terminaram com sucesso e não serão reiniciados
+4. **Failed**: Todos os containers terminaram e pelo menos um falhou
+5. **Unknown**: Por alguma razão, o estado do pod não pode ser obtido
+
+
 ### Control Plane
 
 É um dos nós do cluster que faz o gerenciamento dos nós, inclusive é ideal ter redundância desse cara, porque se ele cair nossos nós ficam sem um controlador. Importante deixar um nó específico para esse cara, porque até da para rodar worker junto com o controle Plane, mas não é uma boa.
