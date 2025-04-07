@@ -65,6 +65,47 @@ O ciclo de vida de um Pod no Kubernetes passa por diferentes estados:
 5. **Unknown**: Por alguma razão, o estado do pod não pode ser obtido
 
 
+#### Desligamento - Graceful Shutdown
+
+Na configuração do Pod tu podes alterar esse tempo padrão de espera até a aplicação desligar e fechar conexões.
+
+```yaml
+spec:
+  terminationGracePeriodSeconds: 60
+```
+
+Se quiseres saber mais sobre o assunto, consulte a documentação [Container Lifecycle Hooks](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/).
+
+##### Processo de Desligamento no Kubernetes
+
+Quando um Pod é encerrado no Kubernetes, o sistema segue estas etapas:
+
+1. **SIGTERM** - Envia sinal SIGTERM para o container
+2. **Período de Graceful** - Aguarda o tempo definido em `terminationGracePeriodSeconds` (padrão: 30s)
+3. **SIGKILL** - Envia SIGKILL se o container não encerrar no tempo definido
+
+O período de graceful permite que a aplicação:
+- Finalize requisições em andamento
+- Feche conexões com bancos de dados
+- Libere recursos e locks
+- Salve estados e cache
+
+##### Capturando Sinais em Aplicações
+
+Para implementar o graceful shutdown, sua aplicação deve capturar o sinal SIGTERM:
+
+- **Node.js**: Use `process.on('SIGTERM', callback)` para detectar o sinal e fechar conexões
+- **C# (.NET)**: Utilize `CancellationToken` nos serviços e configure `UseShutdownTimeout`
+- **Java**: Implemente um `Runtime.getRuntime().addShutdownHook(Thread)`
+- **Go**: Use `signal.Notify()` para capturar sinais e iniciar o desligamento
+
+##### Boas Práticas
+
+- Ajuste o `terminationGracePeriodSeconds` conforme a necessidade real da aplicação
+- Implemente handlers para SIGTERM em todas as aplicações
+- Monitore logs durante o processo de desligamento
+- Use probes de readiness/liveness em conjunto com o graceful shutdown
+
 ### Deployment
 
 Toda a configuração dos pods são feitas através deste controlador, instancias, imagens...
