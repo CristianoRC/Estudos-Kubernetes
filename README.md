@@ -24,22 +24,7 @@ Sãos os nós que executam os containers
 
 ### Pods
 
-Não podemos falar que o worker executa um container, no k8s, a menor unidade se chama **pod**, dentro dele pode ter um ou mais container.
-Um exemplo de uso de pod com mais de um container, é a ideia de sidecar.
-
-Outro ponto importante, é que eles tem um namespace de rede compartilhado entre eles, então eles conseguem se comunicar via localhost.
-
-#### Ciclo de vida
-
- <img src="./images/lifecycle.svg" width="700"/>
-
-O ciclo de vida de um Pod no Kubernetes passa por diferentes estados:
-1. **Pending**: O pod foi aceito pelo cluster, mas um ou mais containers ainda não estão prontos para execução
-2. **Running**: Todos os containers foram criados e pelo menos um está em execução
-3. **Succeeded**: Todos os containers terminaram com sucesso e não serão reiniciados
-4. **Failed**: Todos os containers terminaram e pelo menos um falhou
-5. **Unknown**: Por alguma razão, o estado do pod não pode ser obtido
-
+A menor unidade de execução no Kubernetes é o **pod**, não o container. Um pod encapsula um ou mais containers que compartilham recursos e são sempre programados juntos no mesmo nó. Para detalhes completos sobre pods, ciclo de vida e configurações, consulte a seção de Conceitos.
 
 ### Control Plane
 
@@ -60,6 +45,25 @@ Na prática, o k8s precisa de um container engine e um container runtime, e cai 
 <img src="./images/estrutura.png" width="750"/>
 
 ## Conceitos
+
+### Pods
+
+Não podemos falar que o worker executa um container, no k8s, a menor unidade se chama **pod**, dentro dele pode ter um ou mais container.
+Um exemplo de uso de pod com mais de um container, é a ideia de sidecar.
+
+Outro ponto importante, é que eles tem um namespace de rede compartilhado entre eles, então eles conseguem se comunicar via localhost.
+
+#### Ciclo de vida
+
+ <img src="./images/lifecycle.svg" width="700"/>
+
+O ciclo de vida de um Pod no Kubernetes passa por diferentes estados:
+1. **Pending**: O pod foi aceito pelo cluster, mas um ou mais containers ainda não estão prontos para execução
+2. **Running**: Todos os containers foram criados e pelo menos um está em execução
+3. **Succeeded**: Todos os containers terminaram com sucesso e não serão reiniciados
+4. **Failed**: Todos os containers terminaram e pelo menos um falhou
+5. **Unknown**: Por alguma razão, o estado do pod não pode ser obtido
+
 
 ### Deployment
 
