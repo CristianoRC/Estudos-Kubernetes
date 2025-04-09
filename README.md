@@ -108,7 +108,37 @@ Para implementar o graceful shutdown, sua aplicação deve capturar o sinal SIGT
 
 ### Deployment
 
-Toda a configuração dos pods são feitas através deste controlador, instancias, imagens...
+O objetivo principal do Deployment é gerenciar a criação e atualização de Pods no cluster. Em produção, nunca se cria Pods diretamente, mas sim através de Deployments, que garantem:
+
+- Criação automática do número desejado de réplicas
+- Recuperação automática em caso de falhas
+- Atualizações controladas sem downtime (rolling updates)
+- Rollback para versões anteriores quando necessário
+
+Indicado para aplicações stateless, como serviços web, APIs e microserviços.
+
+**Nota:** Deployment, StatefulSet e DaemonSet são todos controladores no Kubernetes, cada um com finalidade específica para diferentes tipos de aplicações.
+
+#### StatefulSets
+
+Indicado para aplicações que precisam manter estado. Fornece:
+
+- Identificadores de rede estáveis e previsíveis
+- Armazenamento persistente que sobrevive a reinicializações
+- Ordenação garantida na implantação e escalonamento
+- Nomes de pods persistentes (app-0, app-1, app-2)
+
+Casos de uso típicos: bancos de dados distribuídos, sistemas de mensageria e aplicações que exigem inicialização sequencial.
+
+#### DaemonSet
+
+Um DaemonSet é indicado quando você precisa garantir que uma cópia de um pod seja executada em cada nó do cluster (ou em nós específicos que atendam a certos critérios). Casos de uso típicos incluem:
+
+- Coleta de logs - como Fluentd, Logstash
+- Monitoramento de nós - como Prometheus Node Exporter, collectd
+- Agentes de segurança - como Falco, Sysdig
+- Armazenamento - como Ceph, GlusterFS
+Os DaemonSets garantem que, mesmo quando novos nós são adicionados ao cluster, os pods necessários serão automaticamente implantados neles.
 
 ### ReplicaSet
 
