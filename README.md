@@ -142,7 +142,13 @@ Os DaemonSets garantem que, mesmo quando novos nós são adicionados ao cluster,
 
 ### ReplicaSet
 
-Responsável por garantir a quantidade de pods em execução.
+O ReplicaSet garante que um número especificado de réplicas de Pods esteja em execução a qualquer momento. Suas principais funções são:
+
+- Manter o número desejado de Pods sempre disponíveis
+- Recriar Pods automaticamente em caso de falhas 
+- Fornecer alta disponibilidade para aplicações
+
+O ReplicaSet não implementa estratégias de atualização (como RollingUpdate ou Recreate), pois essa funcionalidade é fornecida pelo Deployment. É por isso que, embora seja possível usar ReplicaSets diretamente, na prática raramente são manipulados manualmente. O Deployment gerencia ReplicaSets para implementar atualizações controladas e rollbacks.
 
 <img src="https://storage.googleapis.com/cdn.thenewstack.io/media/2017/11/07751442-deployment.png" width="600"/>
 
