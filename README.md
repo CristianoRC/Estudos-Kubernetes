@@ -277,6 +277,11 @@ Com a parte de deployment, se eu deletar um pod, ou ele _crashar_, o k8s já sob
 
 - Deletar um deploy: `kubectl delete deploy servidor-web`
 
+- Editar um deployment em tempo real: `kubectl edit deploy servidor-web`
+  - Abre o manifesto do deployment em um editor de texto
+  - Alterações são aplicadas assim que o arquivo é salvo
+  - Útil para ajustes rápidos como mudar imagem, recursos ou variáveis de ambiente
+
 - Escalando meu deployment: `kubectl scale deployment servidor-web --replicas 5`. Para "desescalar", só rodar o comando novamente mudando o numero de replicas.
 
 A parte de escala a gente faz de forma automática em produção, com ferramentas como o Keda e outras metricas de requests, infra...
