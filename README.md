@@ -269,6 +269,8 @@ Com a parte de deployment, se eu deletar um pod, ou ele _crashar_, o k8s já sob
 
 - Criação de um deployment: `kubectl create deployment --image nginx servidor-web`
 
+- Criar um template de deployment: `k create deployment --image nginx servidor-web --dry-run -o yaml | kubectl neat > templates/deployment.yaml`
+
 - Listar deployments: `kubectl get deployment`
 
 - Listar replicasets: `kubectl get replicaset`
