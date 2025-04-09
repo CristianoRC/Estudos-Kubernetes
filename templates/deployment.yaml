@@ -1,16 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: servidor-web
   name: servidor-web
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: servidor-web
-  strategy: {}
   template:
     metadata:
       creationTimestamp: null
@@ -20,5 +18,3 @@ spec:
       containers:
       - image: nginx
         name: nginx
-        resources: {}
-status: {}
