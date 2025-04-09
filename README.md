@@ -281,6 +281,9 @@ Com a parte de deployment, se eu deletar um pod, ou ele _crashar_, o k8s já sob
 
 A parte de escala a gente faz de forma automática em produção, com ferramentas como o Keda e outras metricas de requests, infra...
 
+**Nome dos Pods**: por padrão eles sempre vão ser: `{nome do deployment}-{hash do replicaset}-{hash aleatorio}`  
+Exemplo: `nginx-7df484c9bc-j2kdp`
+
 #### Services
 
 - Criando nosso deployment: `kubectl create deployment --image nginx --dry-run -oyaml servidor-web > servidor-web.yaml`
