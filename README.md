@@ -333,7 +333,6 @@ A criação também podemos fazer com um YAML
     - kubectl neate: precisa ser instalado a parte e serve para limpar manifestos YAML, removendo campos desnecessários e metadados gerados automaticamente pelo sistema. `kubectl krew install neat`
 - Criar usando o YAML: `kubectl apply -f namespace-example.yaml`
 
-
 #### Logs
 
 - Listar os logs de um pod: `kubectl logs -n {namespace-name} {pod-name}`
@@ -343,6 +342,45 @@ A criação também podemos fazer com um YAML
 - Ver logs com timestamp: `kubectl logs -n {namespace-name} {pod-name} --timestamps=true`
 - Ver logs desde um determinado momento: `kubectl logs -n {namespace-name} {pod-name} --since=1h` (suporta s, m, h)
 
+### Metadata, Labels e Selectors
+
+#### Metadata
+
+Todo recurso no Kubernetes possui metadata contendo informações sobre o objeto, como nome, namespace, anotações e labels. Essa metadata é crucial para identificação e organização dos recursos.
+
+#### Labels
+
+Labels são pares chave-valor anexados aos objetos que permitem categorizar e filtrar recursos. Por exemplo: `app: frontend`, `ambiente: producao`.
+
+- Listar pods com suas labels: `kubectl get pods --show-labels`
+- Filtrar por label: `kubectl get pods -l app=frontend`
+- Adicionar label: `kubectl label pods meu-pod equipe=pagamentos`
+- Remover label: `kubectl label pods meu-pod equipe-`
+
+#### Selectors
+
+Selectors são mecanismos para filtrar recursos com base em suas labels. São fundamentais para:
+
+- Direcionar services para pods específicos
+- Definir quais pods um ReplicaSet deve gerenciar
+- Especificar alvos para deployments
+
+Em um Service, o selector determina quais Pods receberão tráfego:
+
+```yaml
+spec:
+  selector:
+    app: backend
+    tier: api
+```
+
+Os selectors podem ser de dois tipos:
+- **Equality-based**: usando `=`, `==` ou `!=` (ex: `app=frontend`)
+- **Set-based**: usando `in`, `notin`, `exists` (ex: `app in (frontend,backend)`)
+
+Exemplos de uso:
+- Filtrar pods por label: `kubectl get pods -l app=frontend`
+- Usar múltiplos critérios: `kubectl get pods -l 'app=frontend,tier=web'`
 
 ### Operators
 
