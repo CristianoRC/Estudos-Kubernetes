@@ -239,8 +239,6 @@ Dicas de ferramentas que você pode usar em usa máquina local para fazer testes
 
 - [K3S](https://k3s.io/)
 
-
-
 ### Kubctl
 
 Essa é a ferramenta de linha de comando que geralmente é usada para comunicação com o cluster. [Como Install o kubctl.](https://pwittrock.github.io/docs/tasks/tools/install-kubectl/)
@@ -288,6 +286,54 @@ A parte de escala a gente faz de forma automática em produção, com ferramenta
 
 **Nome dos Pods**: por padrão eles sempre vão ser: `{nome do deployment}-{hash do replicaset}-{hash aleatorio}`  
 Exemplo: `nginx-7df484c9bc-j2kdp`
+
+##### Rollouts
+
+Rollouts são estratégias de atualização controlada para Deployments no Kubernetes. Eles permitem:
+
+- Implementar novas versões sem interrupção do serviço
+- Controlar a velocidade de substituição dos pods
+- Reverter automaticamente em caso de falha
+- Fazer rollback para versões anteriores quando necessário
+
+**Estratégias de Rollout:**
+
+- **RollingUpdate (padrão)**: Substitui pods antigos por novos gradualmente
+- **Recreate**: Encerra todos os pods antigos antes de criar novos (causa indisponibilidade)
+
+**Comandos principais:**
+
+- Ver status de um rollout: `kubectl rollout status deployment/servidor-web`
+- Pausar um rollout: `kubectl rollout pause deployment/servidor-web`
+- Retomar um rollout: `kubectl rollout resume deployment/servidor-web`
+- Ver histórico de revisões: `kubectl rollout history deployment/servidor-web`
+- Fazer rollback para versão anterior: `kubectl rollout undo deployment/servidor-web`
+- Fazer rollback para versão específica: `kubectl rollout undo deployment/servidor-web --to-revision=2`
+
+**Configurações importantes no manifesto YAML:**
+
+```yaml
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1        # Quantos pods a mais podem ser criados durante update
+      maxUnavailable: 1  # Quantos pods podem ficar indisponíveis durante update
+  minReadySeconds: 10    # Tempo mínimo para considerar um pod ready
+```
+
+Para implementar canary deployments (lançamento gradual para um subconjunto de usuários), você pode usar:
+
+```bash
+# Criar deployment com versão 1
+kubectl create deployment servidor-web --image=nginx:1.19 --replicas=5
+
+# Criar deployment com versão 2 (canário)
+kubectl create deployment servidor-web-canary --image=nginx:1.20 --replicas=1
+```
+
+Ambos os deployments podem compartilhar o mesmo serviço se tiverem as mesmas labels, permitindo que apenas uma parte do tráfego vá para a nova versão.
 
 #### Services
 
