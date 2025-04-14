@@ -5,7 +5,13 @@ metadata:
     app: servidor-web
   name: servidor-web
 spec:
-  replicas: 1
+  replicas: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 5        # Quantos pods a mais podem ser criados durante update
+      maxUnavailable: 1  # Quantos pods podem ficar indisponíveis durante update
+  minReadySeconds: 10    # Tempo mínimo para considerar um pod ready
   selector:
     matchLabels:
       app: servidor-web
@@ -18,3 +24,6 @@ spec:
       containers:
       - image: nginx
         name: nginx
+        ports:
+        - containerPort: 80
+          protocol: TCP

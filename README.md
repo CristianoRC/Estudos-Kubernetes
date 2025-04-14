@@ -310,6 +310,9 @@ Rollouts são estratégias de atualização controlada para Deployments no Kuber
 - Fazer rollback para versão anterior: `kubectl rollout undo deployment/servidor-web`
 - Fazer rollback para versão específica: `kubectl rollout undo deployment/servidor-web --to-revision=2`
 
+O nome sempre vai ser `deployment/{nome-do-deployment}`, mas também podes aplicar em daemonsets e statefulsets, só vais precisar mudar a parte unicial, exemplo: `daemonset/abc`
+
+
 **Configurações importantes no manifesto YAML:**
 
 ```yaml
@@ -322,18 +325,6 @@ spec:
       maxUnavailable: 1  # Quantos pods podem ficar indisponíveis durante update
   minReadySeconds: 10    # Tempo mínimo para considerar um pod ready
 ```
-
-Para implementar canary deployments (lançamento gradual para um subconjunto de usuários), você pode usar:
-
-```bash
-# Criar deployment com versão 1
-kubectl create deployment servidor-web --image=nginx:1.19 --replicas=5
-
-# Criar deployment com versão 2 (canário)
-kubectl create deployment servidor-web-canary --image=nginx:1.20 --replicas=1
-```
-
-Ambos os deployments podem compartilhar o mesmo serviço se tiverem as mesmas labels, permitindo que apenas uma parte do tráfego vá para a nova versão.
 
 #### Services
 
