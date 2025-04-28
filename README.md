@@ -222,10 +222,6 @@ kubectl apply -f templates/multi-container-pod.yaml
 kubectl logs multi-container-pod -c container-monitor  # Veja logs do container específico
 ```
 
----
-
-
-
 ## Criação de um cluster
 
 Dicas de ferramentas que você pode usar em usa máquina local para fazer testes com k8S.
