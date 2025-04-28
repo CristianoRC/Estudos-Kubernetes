@@ -379,6 +379,31 @@ A criação também podemos fazer com um YAML
 - Ver logs com timestamp: `kubectl logs -n {namespace-name} {pod-name} --timestamps=true`
 - Ver logs desde um determinado momento: `kubectl logs -n {namespace-name} {pod-name} --since=1h` (suporta s, m, h)
 
+##### Describe
+
+Em casos de erro, onde o contianer fica como pending e não sobe, podemos usar o describe para obter mais detalhes sobre o que está acontecendo.
+
+```bash
+kubectl describe pod {pod-name}
+```
+
+Esse comando vai te mostrar:
+- O que aconteceu com o pod desde que ele foi criado
+- Se teve algum erro ao puxar a imagem
+- Se teve problema de recursos (CPU/memória)
+- Se teve algum problema de scheduling
+- Eventos recentes que aconteceram com o pod
+
+Você também pode usar o describe para outros recursos:
+- Services: `kubectl describe service {service-name}`
+- Deployments: `kubectl describe deployment {deployment-name}`
+- Namespaces: `kubectl describe namespace {namespace-name}`
+
+Dica: se você quiser ver só os eventos recentes de todo o cluster, pode usar:
+```bash
+kubectl get events --sort-by='.lastTimestamp'
+```
+
 ### Metadata, Labels e Selectors
 
 #### Metadata
