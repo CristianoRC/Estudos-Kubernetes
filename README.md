@@ -224,9 +224,9 @@ kubectl logs multi-container-pod -c container-monitor  # Veja logs do container 
 
 ---
 
-## Ferramentas
 
-### Criação de um cluster
+
+## Criação de um cluster
 
 Dicas de ferramentas que você pode usar em usa máquina local para fazer testes com k8S.
 
@@ -238,6 +238,8 @@ Dicas de ferramentas que você pode usar em usa máquina local para fazer testes
 - [Minikube](https://minikube.sigs.k8s.io/docs/start/)
 
 - [K3S](https://k3s.io/)
+
+## Comandos
 
 ### Kubctl
 
@@ -443,6 +445,9 @@ Os selectors podem ser de dois tipos:
 Exemplos de uso:
 - Filtrar pods por label: `kubectl get pods -l app=frontend`
 - Usar múltiplos critérios: `kubectl get pods -l 'app=frontend,tier=web'`
+
+
+## Ferramentas
 
 ### Operators
 
