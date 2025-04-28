@@ -466,3 +466,19 @@ Dentro dos operadores podemos dividir eles em 5 níveis.
 
 
 Uma lista com os principais operators você pode encontrar no [operatorhub.io](https://operatorhub.io/)
+
+### https://github.com/FairwindsOps/goldilocks/blob/master/img/screenshot.png?raw=true
+
+O Goldilocks é uma ferramenta que ajuda a otimizar os recursos (CPU e memória) dos seus pods no Kubernetes através do VPA (Vertical Pod Autoscaler). Ele fornece recomendações para ajustar os requests e limits dos seus containers, ajudando a encontrar o "ponto ideal" de recursos.
+
+<img src="https://github.com/FairwindsOps/goldilocks/blob/master/img/screenshot.png?raw=true" width="750"/>
+
+#### O que é VPA?
+
+O VPA (Vertical Pod Autoscaler) é um controlador que:
+- Monitora o uso de recursos dos pods
+- Fornece recomendações de ajuste de recursos
+- Pode automaticamente ajustar os requests e limits dos pods
+- Ajuda a evitar o provisionamento excessivo ou insuficiente de recursos
+
+Para mais informações, consulte a [documentação oficial do Goldilocks](https://goldilocks.docs.fairwinds.com/).
