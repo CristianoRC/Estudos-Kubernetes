@@ -230,7 +230,12 @@ A forma mais simples de fazer isso é usado um endpoint HTTP de health check.
 
 <img src="./images/health-check.svg" width="700"/>
 
-__Liveness, Readiness e Startup__
+Existem alguns tipos de validações de health check no k8s para garantir que o seu __pod__ esta funcionando corretamente.
+- **Startup**: Dá um tempo maior pro container inicializar antes de começar a aplicar os outros probes
+- **Readiness**: Se o container não estiver pronto para receber requisições, ele é removido temporariamente do service. Ex: aplicação ainda carregando configurações; banco de dados não conectado; cache não inicializado...
+- **Liveness**: Se o container não estiver respondendo, ele é reiniciado automaticamente
+
+<img src="./images/probes.png" width="700"/>
 
 ## Criação de um cluster
 
