@@ -222,6 +222,16 @@ kubectl apply -f templates/multi-container-pod.yaml
 kubectl logs multi-container-pod -c container-monitor  # Veja logs do container específico
 ```
 
+#### Probes - Health Check
+
+É uma forma de o próprio cluster identificar se o cluster está saudável, e dependendo da ação conseguir fazer o __self healing__, e manter tudo rodando corretamente. E quem vai fazer essa validação dentro de cada nó, é o Kubelet. 
+
+A forma mais simples de fazer isso é usado um endpoint HTTP de health check.
+
+<img src="./images/health-check.svg" width="700"/>
+
+__Liveness, Readiness e Startup__
+
 ## Criação de um cluster
 
 Dicas de ferramentas que você pode usar em usa máquina local para fazer testes com k8S.
@@ -441,6 +451,7 @@ Os selectors podem ser de dois tipos:
 Exemplos de uso:
 - Filtrar pods por label: `kubectl get pods -l app=frontend`
 - Usar múltiplos critérios: `kubectl get pods -l 'app=frontend,tier=web'`
+
 
 
 ## Ferramentas
