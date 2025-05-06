@@ -235,7 +235,16 @@ Existem alguns tipos de validações de health check no k8s para garantir que o 
 - **Readiness**: Se o container não estiver pronto para receber requisições, ele é removido temporariamente do service. Ex: aplicação ainda carregando configurações; banco de dados não conectado; cache não inicializado...
 - **Liveness**: Se o container não estiver respondendo, ele é reiniciado automaticamente
 
+
+
 <img src="./images/probes.png" width="700"/>
+
+Para testar o conceito de Probes na prática, explore o exemplo em [templates/probes.yaml](./templates/probes.yaml), que demonstra os três tipos de probes (liveness, readiness e startup) configurados em um deployment com nginx. Execute com:
+
+```bash
+kubectl apply -f templates/probes.yaml
+kubectl describe $(kubectl get pods -l app=nginx-probes -o name)  # Verifique as configurações dos probes
+```
 
 ## Criação de um cluster
 
@@ -456,7 +465,6 @@ Os selectors podem ser de dois tipos:
 Exemplos de uso:
 - Filtrar pods por label: `kubectl get pods -l app=frontend`
 - Usar múltiplos critérios: `kubectl get pods -l 'app=frontend,tier=web'`
-
 
 
 ## Ferramentas
