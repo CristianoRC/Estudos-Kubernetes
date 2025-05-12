@@ -329,6 +329,7 @@ Rollouts são estratégias de atualização controlada para Deployments no Kuber
 - Pausar um rollout: `kubectl rollout pause deployment/servidor-web`
 - Retomar um rollout: `kubectl rollout resume deployment/servidor-web`
 - Ver histórico de revisões: `kubectl rollout history deployment/servidor-web`
+- Ver histórico de revisões detalhado: `kubectl rollout history deployment/servidor-web -o yaml`
 - Fazer rollback para versão anterior: `kubectl rollout undo deployment/servidor-web`
 - Fazer rollback para versão específica: `kubectl rollout undo deployment/servidor-web --to-revision=2`
 
