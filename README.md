@@ -348,6 +348,15 @@ spec:
   minReadySeconds: 10    # Tempo mínimo para considerar um pod ready
 ```
 
+#### DaemonSet
+
+- Listar todos os DaemonSets: `kubectl get daemonset` ou `kubectl get ds`, usar `-A` para pegar de todos namespaces
+- Criar um DaemonSet usando arquivo YAML: `kubectl apply -f daemonset.yaml`
+- Descrever um DaemonSet: `kubectl describe ds nome-do-daemonset`
+- Excluir um DaemonSet: `kubectl delete ds nome-do-daemonset`
+- Ver histórico de revisões: `kubectl rollout history daemonset/nome-do-daemonset`
+- Fazer rollback: `kubectl rollout undo daemonset/nome-do-daemonset`
+
 #### Services
 
 - Criando nosso deployment: `kubectl create deployment --image nginx --dry-run -oyaml servidor-web > servidor-web.yaml`
