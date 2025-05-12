@@ -12,6 +12,8 @@ spec:
       labels:
         app: monitoring-agent
     spec:
+      #nodeSelector: Pode ser usado para rodar em nós específicos!
+       # gpu: true
       containers:
       - name: monitoring-agent
         image: busybox:latest
