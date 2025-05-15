@@ -19,7 +19,7 @@ spec:
         spec:
           containers:
           - name: backup
-            image: backup-tools:latest
+            image: ubuntu:latest
             command:
             - /bin/sh
             - -c
