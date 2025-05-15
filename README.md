@@ -222,7 +222,7 @@ kubectl apply -f templates/multi-container-pod.yaml
 kubectl logs multi-container-pod -c container-monitor  # Veja logs do container específico
 ```
 
-#### Probes - Health Check
+### Probes - Health Check
 
 É uma forma de o próprio cluster identificar se o cluster está saudável, e dependendo da ação conseguir fazer o __self healing__, e manter tudo rodando corretamente. E quem vai fazer essa validação dentro de cada nó, é o Kubelet. 
 
@@ -235,8 +235,6 @@ Existem alguns tipos de validações de health check no k8s para garantir que o 
 - **Readiness**: Se o container não estiver pronto para receber requisições, ele é removido temporariamente do service. Ex: aplicação ainda carregando configurações; banco de dados não conectado; cache não inicializado...
 - **Liveness**: Se o container não estiver respondendo, ele é reiniciado automaticamente
 
-
-
 <img src="./images/probes.png" width="700"/>
 
 Para testar o conceito de Probes na prática, explore o exemplo em [templates/probes.yaml](./templates/probes.yaml), que demonstra os três tipos de probes (liveness, readiness e startup) configurados em um deployment com nginx. Execute com:
@@ -246,22 +244,9 @@ kubectl apply -f templates/probes.yaml
 kubectl describe $(kubectl get pods -l app=nginx-probes -o name)  # Verifique as configurações dos probes
 ```
 
-## Criação de um cluster
+### Jobs e CronJobs
 
-Dicas de ferramentas que você pode usar em usa máquina local para fazer testes com k8S.
-
-- [Play with Kubernetes](https://labs.play-with-k8s.com/): Ferramenta online e gratuita para brincar com k8s, mas com limitação de até 4hrs, após isso ela apaga tudo e você precisa iniciar do zero.
-
-- [Kind](https://kind.sigs.k8s.io/): ideal para rodar em uma maquina local
-  - Para instruções detalhadas sobre como configurar e rodar clusters com Kind, consulte o [readme sobre como usar o Kind](./cluster-kind/README.md)
-
-- [Minikube](https://minikube.sigs.k8s.io/docs/start/)
-
-- [K3S](https://k3s.io/)
-
-## Jobs e CronJobs
-
-### Jobs
+#### Jobs
 
 Jobs são recursos que executam uma tarefa até sua conclusão bem-sucedida.
 - Executam tarefas finitas (com início e fim definidos)
@@ -269,7 +254,7 @@ Jobs são recursos que executam uma tarefa até sua conclusão bem-sucedida.
 - Mantem registro dos pods após conclusão
 - Ideais para processamento em lote, migrações e cálculos extensos
 
-### CronJobs
+#### CronJobs
 
 CronJobs são jobs que executam em horários específicos, seguindo uma programação definida.
 - Usam a sintaxe cron padrão do Unix: `* * * * *` (minuto, hora, dia do mês, mês, dia da semana)
@@ -285,6 +270,20 @@ CronJobs são jobs que executam em horários específicos, seguindo uma programa
 - Excluir: `kubectl delete job nome-do-job` ou `kubectl delete cronjob nome-do-cronjob`
 
 Para testar estes conceitos na prática, explore os exemplos em [templates/job.yaml](./templates/job.yaml) e [templates/cronjob.yaml](./templates/cronjob.yaml).
+
+
+## Criação de um cluster
+
+Dicas de ferramentas que você pode usar em usa máquina local para fazer testes com k8S.
+
+- [Play with Kubernetes](https://labs.play-with-k8s.com/): Ferramenta online e gratuita para brincar com k8s, mas com limitação de até 4hrs, após isso ela apaga tudo e você precisa iniciar do zero.
+
+- [Kind](https://kind.sigs.k8s.io/): ideal para rodar em uma maquina local
+  - Para instruções detalhadas sobre como configurar e rodar clusters com Kind, consulte o [readme sobre como usar o Kind](./cluster-kind/README.md)
+
+- [Minikube](https://minikube.sigs.k8s.io/docs/start/)
+
+- [K3S](https://k3s.io/)
 
 ## Comandos
 
