@@ -259,6 +259,33 @@ Dicas de ferramentas que você pode usar em usa máquina local para fazer testes
 
 - [K3S](https://k3s.io/)
 
+## Jobs e CronJobs
+
+### Jobs
+
+Jobs são recursos que executam uma tarefa até sua conclusão bem-sucedida.
+- Executam tarefas finitas (com início e fim definidos)
+- Garantem que a tarefa seja concluída com sucesso
+- Mantem registro dos pods após conclusão
+- Ideais para processamento em lote, migrações e cálculos extensos
+
+### CronJobs
+
+CronJobs são jobs que executam em horários específicos, seguindo uma programação definida.
+- Usam a sintaxe cron padrão do Unix: `* * * * *` (minuto, hora, dia do mês, mês, dia da semana)
+- Criam objetos Job automaticamente nos horários programados
+- Ideais para backups, relatórios e tarefas de manutenção periódicas
+
+#### Comandos principais:
+
+- Listar Jobs: `kubectl get jobs`
+- Listar CronJobs: `kubectl get cronjobs` ou `kubectl get cj`
+- Criar um Job/CronJob: `kubectl apply -f job.yaml`
+- Ver detalhes: `kubectl describe job nome-do-job` ou `kubectl describe cronjob nome-do-cronjob`
+- Excluir: `kubectl delete job nome-do-job` ou `kubectl delete cronjob nome-do-cronjob`
+
+Para testar estes conceitos na prática, explore os exemplos em [templates/job.yaml](./templates/job.yaml) e [templates/cronjob.yaml](./templates/cronjob.yaml).
+
 ## Comandos
 
 ### Kubctl
