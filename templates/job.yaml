@@ -11,6 +11,8 @@ spec:
   backoffLimit: 4
   # Tempo limite para execução (20 minutos)
   activeDeadlineSeconds: 1200
+  # Tempo de vida do Job após a conclusão (100 segundos)
+  ttlSecondsAfterFinished: 100
   template:
     spec:
       containers:
