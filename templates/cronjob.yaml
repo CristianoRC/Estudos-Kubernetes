@@ -3,8 +3,8 @@ kind: CronJob
 metadata:
   name: backup-banco-dados
 spec:
-  # Executar diariamente às 2:00 AM
-  schedule: "0 2 * * *"
+  # Executar a cada 2 minutos (para testes)
+  schedule: "*/2 * * * *"
   # Não permitir execuções concorrentes
   concurrencyPolicy: Forbid
   # Manter histórico dos últimos 3 jobs bem-sucedidos
