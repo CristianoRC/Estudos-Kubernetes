@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-banco-dados
+spec:
+  # Executar diariamente às 2:00 AM
+  schedule: "0 2 * * *"
+  # Não permitir execuções concorrentes
+  concurrencyPolicy: Forbid
+  # Manter histórico dos últimos 3 jobs bem-sucedidos
+  successfulJobsHistoryLimit: 3
+  # Manter histórico do último job com falha
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      # Tempo limite para execução (5 minutos)
+      activeDeadlineSeconds: 300
+      template:
+        spec:
+          containers:
+          - name: backup
+            image: backup-tools:latest
+            command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Iniciando backup em $(date)"
+              echo "Executando scripts de backup..."
+              sleep 5
+              echo "Backup concluído com sucesso!"
+            # Definindo recursos necessários
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "200m"
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
+          # Política de reinicialização
+          restartPolicy: OnFailure 

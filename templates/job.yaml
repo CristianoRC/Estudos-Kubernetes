@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: calculo-pi
+spec:
+  # Número de conclusões bem-sucedidas necessárias
+  completions: 1
+  # Número de pods que podem rodar em paralelo
+  parallelism: 1
+  # Número máximo de tentativas em caso de falha
+  backoffLimit: 4
+  # Tempo limite para execução (10 minutos)
+  activeDeadlineSeconds: 600
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: perl:5.34
+        command: ["perl", "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+      # Política de reinicialização para Jobs deve ser Never ou OnFailure
+      restartPolicy: OnFailure
