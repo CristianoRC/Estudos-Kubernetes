@@ -9,14 +9,14 @@ spec:
   parallelism: 1
   # Número máximo de tentativas em caso de falha
   backoffLimit: 4
-  # Tempo limite para execução (10 minutos)
-  activeDeadlineSeconds: 600
+  # Tempo limite para execução (20 minutos)
+  activeDeadlineSeconds: 1200
   template:
     spec:
       containers:
       - name: pi
         image: perl:5.34
-        command: ["perl", "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+        command: ["perl", "-Mbignum=bpi", "-wle", "print bpi(20000)"]
         resources:
           requests:
             memory: "64Mi"
