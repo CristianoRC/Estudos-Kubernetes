@@ -154,7 +154,9 @@ O ReplicaSet não implementa estratégias de atualização (como RollingUpdate o
 
 ### Services
 
-Ferramenta que facilita o acesso de serviços externos ao nosso nó/cluster, ele fica como se fosse um load balancer.
+O Service é um recurso fundamental do Kubernetes que atua como um ponto de acesso estável para seus pods, resolvendo o problema de comunicação tanto entre aplicações dentro do cluster quanto com o mundo externo. Ele funciona como um balanceador de carga interno, permitindo que aplicações se comuniquem de forma confiável entre si e que usuários externos acessem seus serviços, independentemente de onde os pods estejam rodando.
+
+Além de ser um balanceador de carga, o Service também atua como um mecanismo de service discovery, fornecendo um nome DNS estável dentro do cluster. Isso significa que as aplicações podem se comunicar entre si usando apenas o nome do serviço, sem precisar conhecer IPs ou portas específicas dos pods. Ele opera na camada 4 (TCP/UDP) do modelo OSI, sendo o ponto único de entrada para um conjunto de pods, simplificando a configuração de rede e segurança.
 
 <img src="./images/services.png" width="650"/>
 
