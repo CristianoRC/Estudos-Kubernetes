@@ -229,7 +229,7 @@ Pods podem conter mais de um container, compartilhando recursos como volumes e r
 - Containers podem se comunicar via localhost
 - Compartilham o mesmo ciclo de vida (criados e destruídos juntos)
 
-Para testar o conceito de Multi-Container Pods na prática, explore o exemplo em [templates/multi-container-pod.yaml](./templates/multi-container-pod.yaml), que demonstra três containers compartilhando um volume. Execute com:
+Para testar o conceito de Multi-Container Pods na prática, explore o exemplo em [templates/pods/multi-container-pod.yaml](./templates/pods/multi-container-pod.yaml), que demonstra três containers compartilhando um volume. Execute com:
 
 ```bash
 kubectl apply -f templates/multi-container-pod.yaml
