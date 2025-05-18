@@ -160,7 +160,7 @@ Além de ser um balanceador de carga, o Service também atua como um mecanismo d
 
 <img src="./images/services.png" width="650"/>
 
-**Cluster IP:** esse é o padrão, onde você tem um Ip(fixo) para o cluster, e tudo passa por ali, não existe a possibilidade de chamar um Pod/nó diretamente. O importante é que você só consegue acesso se você estiver dentro do cluster, só para comunicação interna.
+**Cluster IP:** é o tipo padrão de Service, onde você tem um IP fixo dentro do cluster que serve como ponto único de acesso para seus pods. Toda comunicação interna entre serviços deve passar por esse IP, não sendo possível acessar os pods diretamente. Ideal para comunicação entre serviços dentro do cluster.
 
 **Node Port:** aqui te da acesso direto a rede do teu serviço, direto no nó, não é muito bom usar isso no ambiente de produção, aqui tu já consegue ter acesso usando um serviço externo ao cluster. Quando se tem mais de um nó, aí já se torna problematico, porque você tem que saber o ip de todos... aí para isso temos a próxima solução.
 
