@@ -374,3 +374,27 @@ Rollouts são estratégias de atualização controlada para Deployments no Kuber
 - Fazer rollback para versão específica: `kubectl rollout undo deployment/servidor-web --to-revision=2`
 
 O nome sempre vai ser `deployment/{nome-do-deployment}`, mas também podes aplicar em daemonsets e statefulsets, só vais precisar mudar a parte unicial, exemplo: `daemonset/abc`
+
+
+#### Logs e Events
+
+##### Logs
+
+
+- Visualizar logs de um pod: `kubectl logs <nome-do-pod>`
+- Visualizar logs em tempo real (follow): `kubectl logs <nome-do-pod> -f`
+- Visualizar logs de um container específico em pod com múltiplos containers: `kubectl logs <nome-do-pod> -c <nome-do-container>`
+- Visualizar logs de todos os pods com uma label: `kubectl logs -l app=nginx`
+- Visualizar últimas N linhas de logs: `kubectl logs <nome-do-pod> --tail=100`
+- Visualizar logs desde uma certa duração: `kubectl logs <nome-do-pod> --since=1h`
+- Visualizar logs de pods anteriores (se o pod foi reiniciado): `kubectl logs <nome-do-pod> --previous`
+
+##### Events
+
+- Listar todos os eventos: `kubectl get events`
+- Listar eventos ordenados por timestamp: `kubectl get events --sort-by='.metadata.creationTimestamp'`
+- Listar eventos em formato detalhado: `kubectl get events -o wide`
+- Visualizar eventos de um namespace específico: `kubectl get events -n <namespace>`
+- Listar apenas eventos de warning: `kubectl get events --field-selector type=Warning`
+- Monitorar eventos em tempo real: `kubectl get events -w`
+- Visualizar eventos em formato YAML/JSON: `kubectl get events -o yaml`
