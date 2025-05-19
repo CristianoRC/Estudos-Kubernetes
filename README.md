@@ -251,7 +251,7 @@ Existem alguns tipos de validações de health check no k8s para garantir que o 
 
 <img src="./images/probes.png" width="700"/>
 
-Para testar o conceito de Probes na prática, explore o exemplo em [templates/probes.yaml](./templates/probes.yaml), que demonstra os três tipos de probes (liveness, readiness e startup) configurados em um deployment com nginx. Execute com:
+Para testar o conceito de Probes na prática, explore o exemplo em [templates/probes/probes.yaml](./templates/probes/probes.yaml), que demonstra os três tipos de probes (liveness, readiness e startup) configurados em um deployment com nginx. Execute com:
 
 ```bash
 kubectl apply -f templates/probes.yaml
@@ -283,7 +283,7 @@ CronJobs são jobs que executam em horários específicos, seguindo uma programa
 - Ver detalhes: `kubectl describe job nome-do-job` ou `kubectl describe cronjob nome-do-cronjob`
 - Excluir: `kubectl delete job nome-do-job` ou `kubectl delete cronjob nome-do-cronjob`
 
-Para testar estes conceitos na prática, explore os exemplos em [templates/job.yaml](./templates/job.yaml) e [templates/cronjob.yaml](./templates/cronjob.yaml).
+Para testar estes conceitos na prática, explore os exemplos em [templates/jobs/job.yaml](./templates/jobs/job.yaml) e [templates/jobs/cronjob.yaml](./templates/jobs/cronjob.yaml).
 
 
 ## Criação de um cluster
