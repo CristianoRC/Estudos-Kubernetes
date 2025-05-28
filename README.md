@@ -192,10 +192,6 @@ Os Endpoints representam os destinos reais para onde o tráfego de um Service é
 
 Evolução dos Endpoints tradicionais para melhorar a escalabilidade em clusters grandes.
 
-##### Comandos principais:
-
-- Listar Endpoints: `kubectl get endpoints` ou `kubectl get ep`
-- Ver detalhes: `kubectl describe endpoints <nome-do-service>`
 
 ### Ingress
 
