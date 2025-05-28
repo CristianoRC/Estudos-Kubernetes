@@ -180,6 +180,22 @@ Além de ser um balanceador de carga, o Service também atua como um mecanismo d
 
 <img src="https://i.stack.imgur.com/1lunW.png" width="750"/>
 
+#### Endpoints
+
+Os Endpoints representam os destinos reais para onde o tráfego de um Service é encaminhado. São a lista atual de todos os IPs e portas dos Pods que correspondem ao seletor do Service.
+
+- Criados automaticamente quando você cria um Service com seletor
+- Atualizados quando Pods são criados, removidos ou mudam de estado
+- Podem ser configurados manualmente para apontar para destinos externos ao cluster
+
+##### EndpointSlices
+
+Evolução dos Endpoints tradicionais para melhorar a escalabilidade em clusters grandes.
+
+##### Comandos principais:
+
+- Listar Endpoints: `kubectl get endpoints` ou `kubectl get ep`
+- Ver detalhes: `kubectl describe endpoints <nome-do-service>`
 
 ### Ingress
 
