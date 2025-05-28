@@ -13,7 +13,12 @@
    kubectl get pods
    ```
 
-3. **Testar acesso (escolha um método)**
+3. **Verificar endpoints**
+   ```bash
+   kubectl get endpoints meu-servico-clusterip
+   ```
+
+4. **Testar acesso (escolha um método)**
 
    - **Port-Forward:**
      ```bash
@@ -30,13 +35,13 @@
      curl meu-servico-clusterip
      ```
 
-4. **Ver balanceamento de carga**
+5. **Ver balanceamento de carga**
    ```bash
    # Executar várias vezes para ver diferentes pods respondendo
    for i in {1..5}; do curl meu-servico-clusterip; echo; done 
    ```
 
-5. **Limpar recursos**
+6. **Limpar recursos**
    ```bash
    kubectl delete -f cluster-ip.yaml
    ```
