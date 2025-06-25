@@ -1,0 +1,121 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  labels:
+    app: web-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+      initContainers:
+      - name: create-html
+        image: busybox
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo '<!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="UTF-8">
+              <title>Web App via Ingress</title>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  text-align: center;
+                  margin-top: 100px;
+                  background-color: #f0f8ff;
+                }
+                .container {
+                  background-color: white;
+                  border-radius: 10px;
+                  padding: 30px;
+                  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                  max-width: 600px;
+                  margin: 0 auto;
+                }
+                h1 { color: #2c3e50; }
+                .info { 
+                  color: #7f8c8d; 
+                  margin-top: 20px;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <h1>🌐 Aplicação Web via Ingress</h1>
+                <p>Esta aplicação está sendo acessada através do Ingress Controller!</p>
+                <div class="info">
+                  <p><strong>Hostname:</strong> '$(hostname)'</p>
+                  <p><strong>Pod IP:</strong> '$(hostname -i)'</p>
+                </div>
+              </div>
+            </body>
+            </html>' > /shared/index.html
+        volumeMounts:
+        - name: html-volume
+          mountPath: /shared
+      volumes:
+      - name: html-volume
+        emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app-service
+  labels:
+    app: web-app
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: web-app
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: webapp.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-app-service
+            port:
+              number: 80
+  # Para acesso sem host específico (usando IP)
+  - http:
+      paths:
+      - path: /webapp
+        pathType: Prefix
+        backend:
+          service:
+            name: web-app-service
+            port:
+              number: 80 

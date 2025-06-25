@@ -235,7 +235,6 @@ kubectl get pods -w   # Observe o estado "Init" por 40 segundos
 ```
 
 ### Multi-Container Pods
-
 Pods podem conter mais de um container, compartilhando recursos como volumes e rede.
 - Todos os containers no pod compartilham o mesmo IP e namespace de rede
 - Containers podem se comunicar via localhost
@@ -387,6 +386,83 @@ Rollouts são estratégias de atualização controlada para Deployments no Kuber
 
 O nome sempre vai ser `deployment/{nome-do-deployment}`, mas também podes aplicar em daemonsets e statefulsets, só vais precisar mudar a parte unicial, exemplo: `daemonset/abc`
 
+#### Ingress
+
+O Ingress gerencia o acesso externo aos serviços no cluster, atuando como um proxy reverso que roteia tráfego HTTP/HTTPS.
+
+- Listar todos os ingresses: `kubectl get ingress`
+- Listar ingresses com detalhes: `kubectl get ingress -o wide`
+- Criar um ingress: `kubectl apply -f ingress.yaml`
+- Ver detalhes de um ingress: `kubectl describe ingress <nome-do-ingress>`
+- Editar um ingress: `kubectl edit ingress <nome-do-ingress>`
+- Deletar um ingress: `kubectl delete ingress <nome-do-ingress>`
+- Ver configuração em YAML: `kubectl get ingress <nome-do-ingress> -o yaml`
+- Listar classes de ingress disponíveis: `kubectl get ingressclass`
+
+**Importante**: Para usar Ingress, você precisa de um Ingress Controller instalado no cluster (nginx, traefik, etc.).
+
+##### Instalando um Ingress Controller
+
+Para usar recursos de Ingress, você precisa instalar um Ingress Controller. Aqui estão as opções mais comuns:
+
+**NGINX Ingress Controller (mais popular):**
+```bash
+# Instalar via kubectl
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.3/deploy/static/provider/cloud/deploy.yaml
+
+# Para clusters locais (Kind, minikube):
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.3/deploy/static/provider/kind/deploy.yaml
+```
+
+**Verificar instalação:**
+```bash
+# Verificar se está rodando
+kubectl get pods -n ingress-nginx
+```
+
+**Documentação oficial:**
+- NGINX Ingress: [kubernetes.github.io/ingress-nginx](https://kubernetes.github.io/ingress-nginx/)
+- Conceitos gerais: [kubernetes.io/docs/concepts/services-networking/ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
+**Outros Ingress Controllers populares:**
+- Traefik: [doc.traefik.io/traefik/providers/kubernetes-ingress](https://doc.traefik.io/traefik/providers/kubernetes-ingress/)
+- HAProxy: [haproxy-ingress.github.io](https://haproxy-ingress.github.io/)
+
+**Testar o Ingress Controller:**
+```bash
+# Para clusters locais, usar port-forward para testar
+kubectl port-forward --namespace=ingress-nginx service/ingress-nginx-controller 8080:80
+
+##### Configuração específica para Kind
+
+Se você estiver usando um cluster Kind, é necessário adicionar o label `ingress-ready=true` ao nó worker para que o ingress controller possa ser agendado:
+
+```bash
+# Verificar os nós disponíveis
+kubectl get nodes
+
+# Adicionar o label necessário ao nó worker
+kubectl label node kind-worker ingress-ready=true
+```
+
+__Obs.:__ este "problema" não se limita somente ao Kind.
+
+##### Exemplo Prático
+
+Para testar o Ingress na prática, use o exemplo completo em [templates/ingress/web-app-ingress.yaml](./templates/ingress/web-app-ingress.yaml), que demonstra um deployment com nginx acessado via Ingress:
+
+```bash
+# Aplicar o exemplo
+kubectl apply -f templates/ingress/web-app-ingress.yaml
+
+
+# Testar o acesso
+curl http://localhost/webapp
+
+# Via port-forward do ingress controller
+kubectl port-forward -n ingress-nginx service/ingress-nginx-controller 8080:80
+# Acesse: http://localhost:8080/webapp
+```
 
 #### Logs e Events
 
