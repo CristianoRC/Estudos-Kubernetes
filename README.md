@@ -386,6 +386,8 @@ Rollouts são estratégias de atualização controlada para Deployments no Kuber
 
 O nome sempre vai ser `deployment/{nome-do-deployment}`, mas também podes aplicar em daemonsets e statefulsets, só vais precisar mudar a parte unicial, exemplo: `daemonset/abc`
 
+- Reiniciar um deployment sem alterar a configuração: `kubectl rollout restart deployment/servidor-web`
+
 #### Ingress
 
 O Ingress gerencia o acesso externo aos serviços no cluster, atuando como um proxy reverso que roteia tráfego HTTP/HTTPS.
