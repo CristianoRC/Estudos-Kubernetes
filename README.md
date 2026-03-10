@@ -119,6 +119,33 @@ Indicado para aplicações stateless, como serviços web, APIs e microserviços.
 
 **Nota:** Deployment, StatefulSet e DaemonSet são todos controladores no Kubernetes, cada um com finalidade específica para diferentes tipos de aplicações.
 
+#### HPA - Horizontal Pod Autoscaler
+
+O HPA escala automaticamente o número de réplicas de um Deployment com base em métricas (CPU, memória ou métricas customizadas). Quando a carga aumenta, ele cria mais pods; quando diminui, remove o excesso.
+
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: minha-api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: minha-api
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+```
+
+- Ver status: `kubectl get hpa`
+
 #### StatefulSets
 
 Indicado para aplicações que precisam manter estado. Fornece:
@@ -362,7 +389,7 @@ Com a parte de deployment, se eu deletar um pod, ou ele _crashar_, o k8s já sob
 
 - Escalando meu deployment: `kubectl scale deployment servidor-web --replicas 5`. Para "desescalar", só rodar o comando novamente mudando o numero de replicas.
 
-A parte de escala a gente faz de forma automática em produção, com ferramentas como o Keda e outras metricas de requests, infra...
+A parte de escala a gente faz de forma automática em produção, com o [HPA](#hpa---horizontal-pod-autoscaler) para métricas de infra (CPU/memória) e o [KEDA](#keda---kubernetes-event-driven-autoscaling) para métricas customizadas como filas e eventos.
 
 **Nome dos Pods**: por padrão eles sempre vão ser: `{nome do deployment}-{hash do replicaset}-{hash aleatorio}`  
 Exemplo: `nginx-7df484c9bc-j2kdp`
