@@ -297,6 +297,13 @@ CronJobs são jobs que executam em horários específicos, seguindo uma programa
 Para testar estes conceitos na prática, explore os exemplos em [templates/jobs/job.yaml](./templates/jobs/job.yaml) e [templates/jobs/cronjob.yaml](./templates/jobs/cronjob.yaml).
 
 
+### KEDA - Kubernetes Event-driven Autoscaling
+
+<img src="https://keda.sh/img/logos/keda-icon-color.png" width="150"/>
+
+
+---
+
 ## Criação de um cluster
 
 Dicas de ferramentas que você pode usar em usa máquina local para fazer testes com k8S.
