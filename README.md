@@ -129,22 +129,45 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: minha-api
 spec:
-  scaleTargetRef:
+  scaleTargetRef:       # Qual recurso o HPA vai controlar
     apiVersion: apps/v1
     kind: Deployment
     name: minha-api
-  minReplicas: 2
-  maxReplicas: 10
+  minReplicas: 2        # Mínimo de pods — nunca vai abaixo disso
+  maxReplicas: 10       # Máximo de pods — nunca vai acima disso
   metrics:
-    - type: Resource
+    - type: Resource    # Métrica de infra (cpu ou memory)
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 70
+          averageUtilization: 70  # % média de uso do resources.requests entre os pods
+
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
 ```
 
+**Scale down:** por padrão o HPA aguarda **5 minutos** antes de remover pods para evitar flapping. O campo `behavior` permite controlar isso em detalhes:
+
+- `scaleDown.stabilizationWindowSeconds`: tempo de espera antes de remover pods (padrão: 300s)
+- `scaleUp.stabilizationWindowSeconds`: tempo de espera antes de adicionar pods (padrão: 0s, sobe imediatamente)
+- `policies`: define a velocidade máxima de escalonamento, por quantidade de pods (`type: Pods`) ou por percentual (`type: Percent`) dentro de um período
+- `selectPolicy`: quando há múltiplas policies, `Max` usa a mais agressiva, `Min` a mais conservadora, `Disabled` bloqueia o escalonamento naquela direção
+
+**Sobre os tipos de target:**
+- `Utilization` — percentual em relação ao `resources.requests` do container (só para `Resource`)
+- `AverageValue` — valor absoluto médio por pod
+- `Value` — valor total somado de todos os pods
+
+> **Atenção:** para `type: Resource`, o Deployment **precisa** ter `resources.requests` definidos — é o valor base que o HPA usa para calcular a porcentagem. Sem ele, o HPA fica travado sem conseguir calcular.
+
 - Ver status: `kubectl get hpa`
+
+Para testar na prática: [templates/deployments/deployment-hpa.yaml](./templates/deployments/deployment-hpa.yaml) — veja o [guia completo de como rodar](./templates/deployments/README.md) (inclui fix para clusters locais).
 
 #### StatefulSets
 

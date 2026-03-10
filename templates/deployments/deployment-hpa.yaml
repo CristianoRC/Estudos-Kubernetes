@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hpa-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hpa-demo
+  template:
+    metadata:
+      labels:
+        app: hpa-demo
+    spec:
+      containers:
+      - name: hpa-demo
+        image: registry.k8s.io/hpa-example  # App PHP que faz cálculo pesado por request
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "200m"   # HPA usa isso como base para calcular % de uso
+          limits:
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hpa-demo
+spec:
+  selector:
+    app: hpa-demo
+  ports:
+  - port: 80
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-demo
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hpa-demo
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50  # Escala quando CPU média passar de 50% do request
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 30   # Aguarda 30s antes de remover pods (padrão: 300s)
+      policies:
+        - type: Percent                 # Remove no máximo 50% dos pods por período
+          value: 50
+          periodSeconds: 30
+        - type: Pods                    # Ou no máximo 2 pods por período
+          value: 2
+          periodSeconds: 30
+      selectPolicy: Min                 # Usa a política mais conservadora entre as acima
+    scaleUp:
+      stabilizationWindowSeconds: 0    # Sobe imediatamente (padrão)
+      policies:
+        - type: Percent
+          value: 100                   # Pode dobrar os pods por período
+          periodSeconds: 15
+        - type: Pods
+          value: 4                     # Ou adiciona no máximo 4 pods por período
+          periodSeconds: 15
+      selectPolicy: Max                # Usa a política mais agressiva entre as acima
