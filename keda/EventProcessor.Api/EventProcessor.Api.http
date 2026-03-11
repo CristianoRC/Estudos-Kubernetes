@@ -11,3 +11,18 @@ GET {{hostAddress}}/health
 Accept: application/json
 
 ###
+
+### OpenAPI spec (JSON)
+GET {{hostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
+
+### AsyncAPI spec (JSON)
+GET {{hostAddress}}/asyncapi/asyncapi.json
+Accept: application/json
+
+###
+
+# Scalar UI  -> http://localhost:5187/scalar/v1
+# AsyncAPI UI -> http://localhost:5187/asyncapi/ui
