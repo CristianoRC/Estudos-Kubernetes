@@ -137,7 +137,7 @@ public class EventConsumerWorker(IConfiguration configuration, ILogger<EventCons
             order.OrderId,
             order.CustomerName,
             order.CustomerId,
-            order.Items.Count,
+            order.Items?.Count ?? 0,
             order.TotalAmount,
             order.Currency,
             order.CreatedAt);
