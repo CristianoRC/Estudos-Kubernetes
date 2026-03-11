@@ -1,0 +1,13 @@
+@hostAddress = http://localhost:5187
+
+### Publish 50 OrderCreated events to Azure Service Bus
+POST {{hostAddress}}/events/publish
+Accept: application/json
+
+###
+
+### Health check
+GET {{hostAddress}}/health
+Accept: application/json
+
+###
