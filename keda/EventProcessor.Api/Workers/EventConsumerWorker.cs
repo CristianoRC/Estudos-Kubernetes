@@ -120,14 +120,14 @@ public class EventConsumerWorker(IConfiguration configuration, ILogger<EventCons
         }
     }
 
-    private Task HandleOrderCreatedAsync(CloudEvent cloudEvent, CancellationToken cancellationToken)
+    private async Task HandleOrderCreatedAsync(CloudEvent cloudEvent, CancellationToken cancellationToken)
     {
         var order = DeserializeData<OrderCreatedEvent>(cloudEvent);
 
         if (order is null)
         {
             logger.LogWarning("CloudEvent '{EventId}' of type 'order.created' has null or invalid data", cloudEvent.Id);
-            return Task.CompletedTask;
+            return;
         }
 
         logger.LogInformation(
@@ -142,7 +142,7 @@ public class EventConsumerWorker(IConfiguration configuration, ILogger<EventCons
             order.Currency,
             order.CreatedAt);
 
-        return Task.CompletedTask;
+        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
     }
 
     private static T? DeserializeData<T>(CloudEvent cloudEvent)
