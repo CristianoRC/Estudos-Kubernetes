@@ -9,7 +9,7 @@ namespace EventProcessor.Api.Workers;
 public class EventConsumerWorker(IConfiguration configuration, ILogger<EventConsumerWorker> logger) : BackgroundService
 {
     private static readonly JsonEventFormatter CloudEventFormatter = new();
-    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    private static readonly JsonSerializerOptions JsonOptions = new();
 
     private readonly string _connectionString = configuration.GetConnectionString("ServiceBus")!;
     private readonly string _topicName = configuration["ServiceBus:TopicName"]!;
@@ -137,7 +137,7 @@ public class EventConsumerWorker(IConfiguration configuration, ILogger<EventCons
             order.OrderId,
             order.CustomerName,
             order.CustomerId,
-            order.Items?.Count ?? 0,
+            order.Items.Count,
             order.TotalAmount,
             order.Currency,
             order.CreatedAt);
