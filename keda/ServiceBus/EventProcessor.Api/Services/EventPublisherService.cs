@@ -5,17 +5,18 @@ using EventProcessor.Api.Models;
 
 namespace EventProcessor.Api.Services;
 
-public class EventPublisherService(IConfiguration configuration, ILogger<EventPublisherService> logger)
+public class EventPublisherService(
+    ServiceBusClient serviceBusClient,
+    IConfiguration configuration,
+    ILogger<EventPublisherService> logger)
 {
     private static readonly JsonEventFormatter CloudEventFormatter = new();
-    private readonly string _connectionString = configuration.GetConnectionString("ServiceBus")!;
     private readonly string _topicName = configuration["ServiceBus:TopicName"]!;
     private readonly string _eventSource = configuration["ServiceBus:EventSource"]!;
 
     public async Task<int> PublishOrderCreatedEventsAsync(int count = 50, CancellationToken cancellationToken = default)
     {
-        await using var client = new ServiceBusClient(_connectionString);
-        await using var sender = client.CreateSender(_topicName);
+        await using var sender = serviceBusClient.CreateSender(_topicName);
 
         var batch = await sender.CreateMessageBatchAsync(cancellationToken);
         var publishedCount = 0;

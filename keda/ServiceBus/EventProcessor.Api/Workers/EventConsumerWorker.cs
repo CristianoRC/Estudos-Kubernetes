@@ -6,20 +6,20 @@ using EventProcessor.Api.Models;
 
 namespace EventProcessor.Api.Workers;
 
-public class EventConsumerWorker(IConfiguration configuration, ILogger<EventConsumerWorker> logger) : BackgroundService
+public class EventConsumerWorker(
+    ServiceBusClient serviceBusClient,
+    IConfiguration configuration,
+    ILogger<EventConsumerWorker> logger) : BackgroundService
 {
     private static readonly JsonEventFormatter CloudEventFormatter = new();
     private static readonly JsonSerializerOptions JsonOptions = new();
 
-    private readonly string _connectionString = configuration.GetConnectionString("ServiceBus")!;
     private readonly string _topicName = configuration["ServiceBus:TopicName"]!;
     private readonly string _subscriptionName = configuration["ServiceBus:SubscriptionName"]!;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("EventConsumerWorker starting. Listening on topic '{Topic}', subscription '{Subscription}'", _topicName, _subscriptionName);
-
-        await using var client = new ServiceBusClient(_connectionString);
 
         var processorOptions = new ServiceBusProcessorOptions
         {
@@ -28,7 +28,7 @@ public class EventConsumerWorker(IConfiguration configuration, ILogger<EventCons
             MaxAutoLockRenewalDuration = TimeSpan.FromMinutes(5),
         };
 
-        await using var processor = client.CreateProcessor(_topicName, _subscriptionName, processorOptions);
+        await using var processor = serviceBusClient.CreateProcessor(_topicName, _subscriptionName, processorOptions);
 
         processor.ProcessMessageAsync += HandleMessageAsync;
         processor.ProcessErrorAsync += HandleErrorAsync;

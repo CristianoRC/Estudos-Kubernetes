@@ -2,16 +2,16 @@ using Azure.Messaging.ServiceBus.Administration;
 
 namespace EventProcessor.Api.Infrastructure;
 
-public class ServiceBusInitializer(IConfiguration configuration, ILogger<ServiceBusInitializer> logger)
+public class ServiceBusInitializer(
+    ServiceBusAdministrationClient adminClient,
+    IConfiguration configuration,
+    ILogger<ServiceBusInitializer> logger)
 {
     private readonly string _topicName = configuration["ServiceBus:TopicName"]!;
     private readonly string _subscriptionName = configuration["ServiceBus:SubscriptionName"]!;
-    private readonly string _connectionString = configuration.GetConnectionString("ServiceBus")!;
 
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        var adminClient = new ServiceBusAdministrationClient(_connectionString);
-
         await EnsureTopicExistsAsync(adminClient, cancellationToken);
         await EnsureSubscriptionExistsAsync(adminClient, cancellationToken);
     }

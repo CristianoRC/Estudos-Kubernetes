@@ -1,3 +1,5 @@
+using Azure.Messaging.ServiceBus;
+using Azure.Messaging.ServiceBus.Administration;
 using EventProcessor.Api.AsyncApi;
 using EventProcessor.Api.Infrastructure;
 using EventProcessor.Api.Services;
@@ -8,6 +10,12 @@ using Saunter.AsyncApiSchema.v2;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("ServiceBus")
+    ?? throw new InvalidOperationException("'ConnectionStrings:ServiceBus' is required.");
+
+builder.Services.AddSingleton(new ServiceBusClient(connectionString));
+builder.Services.AddSingleton(new ServiceBusAdministrationClient(connectionString));
 
 builder.Services.AddControllers();
 

@@ -11,7 +11,7 @@
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
     <PackageReference Include="CloudNative.CloudEvents" Version="2.8.0" />
     <PackageReference Include="CloudNative.CloudEvents.SystemTextJson" Version="2.8.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
     <PackageReference Include="Saunter" Version="0.13.0" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.13.5" />
   </ItemGroup>
