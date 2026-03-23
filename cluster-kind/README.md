@@ -72,6 +72,26 @@ docker build -t minha-imagem:latest .
 kind load docker-image minha-imagem:latest
 ```
 
+## Setup automatizado (NGINX + KEDA)
+
+O script [setup.sh](./setup.sh) cria o cluster e instala os componentes necessários automaticamente:
+
+```bash
+# Criar cluster com nome padrão "kind"
+./cluster-kind/setup.sh
+
+# Ou com nome customizado
+./cluster-kind/setup.sh meu-cluster
+```
+
+O script faz:
+1. Verifica pré-requisitos (docker, kind, kubectl, helm)
+2. Cria o cluster Kind com a configuração de [cluster.yaml](./cluster.yaml) (portas 80/443 + label `ingress-ready`)
+3. Instala o **Ingress Controller NGINX** (provider Kind)
+4. Instala o **KEDA v2.19.0** (event-driven autoscaling)
+
+Se o cluster já existir, ele pula a criação e instala apenas os componentes faltantes.
+
 ## Recursos adicionais
 
 - [Documentação oficial do Kind](https://kind.sigs.k8s.io/)
