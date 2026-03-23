@@ -351,6 +351,170 @@ Para testar estes conceitos na prática, explore os exemplos em [templates/jobs/
 
 <img src="https://keda.sh/img/logos/keda-icon-color.png" width="150"/>
 
+O KEDA (Kubernetes Event-Driven Autoscaling) é um componente leve que estende o Kubernetes para escalar workloads com base em eventos externos — como mensagens em filas, tópicos, streams, métricas de banco de dados e muito mais. Enquanto o [HPA](#hpa---horizontal-pod-autoscaler) escala com base em métricas de infra (CPU/memória), o KEDA escala com base em **fontes de eventos**, podendo inclusive **escalar para zero** quando não há trabalho a ser processado.
+
+#### Como funciona
+
+O KEDA instala três componentes no cluster:
+1. **Operator** — observa os `ScaledObject` e gerencia os HPAs associados
+2. **Metrics Server** — expõe métricas externas para o HPA do Kubernetes
+3. **Admission Webhooks** — valida os recursos do KEDA na criação
+
+Na prática, o KEDA cria e gerencia um HPA por baixo dos panos, mas alimenta ele com métricas externas (ex: quantidade de mensagens em uma fila do Azure Service Bus). Quando a métrica chega a zero, o KEDA escala o Deployment para zero réplicas — algo que o HPA nativo não faz.
+
+#### Instalação do KEDA
+
+```bash
+# Via Helm (recomendado)
+helm repo add kedacore https://kedacore.github.io/charts
+helm repo update
+helm install keda kedacore/keda --namespace keda --create-namespace
+
+# Via YAML (alternativa sem Helm) — requer --server-side por conta do tamanho dos CRDs
+# Use --force-conflicts se já houver recursos de uma instalação anterior
+kubectl apply --server-side --force-conflicts -f https://github.com/kedacore/keda/releases/download/v2.19.0/keda-2.19.0.yaml
+
+# Verificar se está rodando
+kubectl get pods -n keda
+```
+
+> **Ref:** [Deploying KEDA — YAML declarations](https://keda.sh/docs/2.19/deploy/#deploying-using-the-deployment-yaml-files)
+
+#### Conceitos principais
+
+**ScaledObject** — recurso que conecta um Deployment (ou StatefulSet/Custom Resource) a um ou mais triggers de eventos:
+
+```yaml
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: meu-scaledobject
+spec:
+  scaleTargetRef:
+    name: meu-deployment          # Deployment que o KEDA vai escalar
+  pollingInterval: 15              # Intervalo (segundos) para checar a métrica
+  cooldownPeriod: 120              # Tempo de espera antes de escalar para zero
+  minReplicaCount: 0               # Mínimo de réplicas (0 = scale-to-zero)
+  maxReplicaCount: 10              # Máximo de réplicas
+  triggers:
+    - type: azure-servicebus       # Tipo do scaler (50+ tipos disponíveis)
+      metadata:
+        topicName: order-events
+        subscriptionName: order-processor
+        messageCount: "5"          # Threshold: 1 pod a cada 5 mensagens pendentes
+```
+
+**TriggerAuthentication** — recurso que fornece credenciais para os triggers, permitindo referenciar Secrets, Pods Identity, ou Azure Workload Identity:
+
+```yaml
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: servicebus-auth
+spec:
+  secretTargetRef:
+    - parameter: connection
+      name: servicebus-secret      # Nome do Secret do Kubernetes
+      key: connection-string       # Chave dentro do Secret
+```
+
+**Parâmetros importantes do ScaledObject:**
+
+| Campo | Descrição |
+|---|---|
+| `pollingInterval` | De quanto em quanto tempo (segundos) o KEDA consulta a fonte de eventos |
+| `cooldownPeriod` | Tempo de espera após a última mensagem antes de escalar para zero |
+| `minReplicaCount` | Mínimo de réplicas. Use `0` para habilitar scale-to-zero |
+| `maxReplicaCount` | Limite superior de réplicas |
+| `messageCount` | Threshold por pod — se tiver 25 mensagens e o threshold é 5, sobe 5 pods |
+| `activationMessageCount` | Quantidade mínima de mensagens para **ativar** o scale-up a partir de zero |
+
+**KEDA vs HPA:**
+
+| | HPA | KEDA |
+|---|---|---|
+| **Métricas** | CPU, memória, métricas custom | 50+ fontes de eventos (filas, streams, DB, HTTP, cron...) |
+| **Scale-to-zero** | Não | Sim |
+| **Instalação** | Nativo do K8s | Precisa instalar o operador |
+| **Caso de uso** | Workloads com tráfego constante | Workloads event-driven e processamento assíncrono |
+
+#### Exemplo prático — Azure Service Bus
+
+O projeto em [keda/ServiceBus/](./keda/ServiceBus/) demonstra um cenário completo com KEDA + Azure Service Bus:
+
+- **API REST** que publica eventos `OrderCreated` (CloudEvents 1.0) em um tópico do Service Bus
+- **Worker** (`BackgroundService`) que consome mensagens da subscription
+- **KEDA** que escala o Deployment de 1 a 10 réplicas com base na quantidade de mensagens pendentes
+
+> **Scale-to-zero:** O exemplo usa `minReplicaCount: 1` para manter pelo menos 1 pod sempre disponível. Porém, o grande diferencial do KEDA é permitir `minReplicaCount: 0`, onde os pods são completamente removidos quando não há mensagens na fila — economizando recursos. Quando novas mensagens chegam, o KEDA sobe os pods automaticamente. Essa abordagem é ideal para workloads esporádicos onde não faz sentido manter pods ociosos.
+
+##### Estrutura dos manifestos (Kustomize)
+
+Os manifestos usam **Kustomize** — cada recurso fica no seu arquivo, e o `kustomization.yaml` unifica tudo. Com um único comando (`kubectl apply -k`) o Kustomize injeta automaticamente o namespace e as labels em todos os recursos.
+
+```
+keda/ServiceBus/
+├── Dockerfile                          # Build multi-stage da aplicação .NET
+├── EventProcessor.Api/                 # Código-fonte da aplicação
+└── k8s/
+    ├── kustomization.yaml              # Orquestrador: namespace, labels, secretGenerator
+    ├── .env                            # Connection string real (NÃO versionado)
+    ├── .env.example                    # Template do .env (versionado)
+    ├── namespace.yaml                  # Namespace 'event-processor'
+    ├── deployment.yaml                 # Deployment da API com probes e resources
+    ├── service.yaml                    # Service ClusterIP
+    └── keda-scaledobject.yaml          # TriggerAuthentication + ScaledObject
+```
+
+O `kustomization.yaml` define:
+- **`namespace: event-processor`** — aplicado em todos os recursos automaticamente
+- **`labels`** — `app.kubernetes.io/name: event-processor-api` injetado em metadata, selectors e template labels
+- **`secretGenerator`** — gera o Secret `servicebus-secret` a partir do arquivo `.env`
+- **`resources`** — lista ordenada dos YAMLs a aplicar
+
+##### Como funciona a connection string
+
+A connection string do Service Bus fica no arquivo **`.env`** (nunca versionado no git). O Kustomize lê esse arquivo via `secretGenerator` e gera um Kubernetes Secret automaticamente no momento do apply. Tanto o **pod** quanto o **KEDA** consomem esse mesmo Secret:
+
+- **Pod** — recebe via variável de ambiente `ConnectionStrings__ServiceBus` usando `secretKeyRef`
+- **KEDA** — acessa via `TriggerAuthentication` com `secretTargetRef`, para consultar a quantidade de mensagens na subscription
+
+O `.env.example` é versionado como template, para que outros devs saibam o formato esperado.
+
+##### Como rodar
+
+```bash
+# 1. Instalar o KEDA no cluster
+helm repo add kedacore https://kedacore.github.io/charts
+helm repo update
+helm install keda kedacore/keda --namespace keda --create-namespace
+
+# 2. Buildar a imagem (para Kind, carregar no cluster)
+docker build -t event-processor-api:latest ./keda/ServiceBus/
+kind load docker-image event-processor-api:latest --name <nome-do-cluster>
+
+# 3. Copiar o template e preencher com sua connection string real
+cp keda/ServiceBus/k8s/.env.example keda/ServiceBus/k8s/.env
+# Edite o .env com os valores reais
+
+# 4. Aplicar tudo com Kustomize (um comando só)
+kubectl apply -k keda/ServiceBus/k8s/
+
+# 5. Verificar o ScaledObject
+kubectl get scaledobject -n event-processor
+kubectl get hpa -n event-processor
+
+# 6. Publicar eventos via API (port-forward primeiro)
+kubectl port-forward svc/event-processor-api 8080:80 -n event-processor
+curl -X POST http://localhost:8080/events/publish
+
+# 7. Observar o KEDA escalando os pods conforme as mensagens chegam
+kubectl get pods -n event-processor -w
+
+# Para remover tudo
+kubectl delete -k keda/ServiceBus/k8s/
+```
+
 
 ---
 

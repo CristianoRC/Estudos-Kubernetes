@@ -1,0 +1,40 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: servicebus-trigger-auth
+spec:
+  secretTargetRef:
+    - parameter: connection
+      name: servicebus-secret
+      key: connection-string
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: event-processor-scaledobject
+spec:
+  scaleTargetRef:
+    name: event-processor-api
+  pollingInterval: 15
+  cooldownPeriod: 120
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  advanced:
+    restoreToOriginalReplicaCount: false
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 60
+          policies:
+            - type: Percent
+              value: 50
+              periodSeconds: 30
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        topicName: order-events
+        subscriptionName: order-processor
+        messageCount: "5"
+        activationMessageCount: "1"
+      authenticationRef:
+        name: servicebus-trigger-auth
