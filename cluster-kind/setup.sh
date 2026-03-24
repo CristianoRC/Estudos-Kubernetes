@@ -35,10 +35,10 @@ echo "=========================================="
 echo ""
 
 # 1. Verificar pré-requisitos
-for cmd in docker kind kubectl helm; do
+for cmd in docker kind kubectl; do
   command -v "$cmd" > /dev/null 2>&1 || err "$cmd não encontrado. Instale antes de continuar."
 done
-log "Pré-requisitos verificados (docker, kind, kubectl, helm)"
+log "Pré-requisitos verificados (docker, kind, kubectl)"
 
 # 2. Criar cluster
 if kind get clusters 2>/dev/null | grep -q "^${CLUSTER_NAME}$"; then
