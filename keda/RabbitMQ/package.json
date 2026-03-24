@@ -1,0 +1,12 @@
+{
+  "name": "rabbitmq-event-consumer",
+  "version": "1.0.0",
+  "description": "Simple RabbitMQ consumer for KEDA scaling example",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.0"
+  }
+}
