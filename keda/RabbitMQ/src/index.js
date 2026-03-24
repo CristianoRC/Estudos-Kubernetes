@@ -6,11 +6,19 @@ const {
   EXCHANGE_TYPE = "topic",
   QUEUE_NAME = "order-processor",
   ROUTING_KEY = "#",
+  PROCESSING_DELAY_MS = "1000",
 } = process.env;
+
+const MAX_RETRIES = 15;
+const BASE_DELAY_MS = 2000;
 
 function log(level, msg) {
   const ts = new Date().toISOString();
   console.log(`${ts} [${level}] ${msg}`);
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function handleOrderCreated(cloudEvent) {
@@ -45,20 +53,36 @@ function handleMessage(msg) {
   }
 }
 
+async function connect() {
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      log("info", `Connecting to RabbitMQ (attempt ${attempt}/${MAX_RETRIES})...`);
+      const connection = await amqplib.connect(RABBITMQ_URL);
+      log("info", "Connected to RabbitMQ");
+      return connection;
+    } catch (err) {
+      if (attempt === MAX_RETRIES) throw err;
+      const delay = Math.min(BASE_DELAY_MS * attempt, 15000);
+      log("warn", `Connection failed: ${err.message}. Retrying in ${delay / 1000}s...`);
+      await sleep(delay);
+    }
+  }
+}
+
 async function main() {
-  log("info", `Connecting to ${RABBITMQ_URL}...`);
-  const connection = await amqplib.connect(RABBITMQ_URL);
+  const connection = await connect();
   const channel = await connection.createChannel();
 
   await channel.assertExchange(EXCHANGE_NAME, EXCHANGE_TYPE, { durable: true });
   await channel.assertQueue(QUEUE_NAME, { durable: true });
   await channel.bindQueue(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
-  await channel.prefetch(5);
+  await channel.prefetch(1);
 
-  log("info", `Listening on queue '${QUEUE_NAME}' (exchange '${EXCHANGE_NAME}')`);
+  log("info", `Listening on queue '${QUEUE_NAME}' (exchange '${EXCHANGE_NAME}', delay ${PROCESSING_DELAY_MS}ms)`);
 
-  channel.consume(QUEUE_NAME, (msg) => {
+  channel.consume(QUEUE_NAME, async (msg) => {
     handleMessage(msg);
+    await sleep(parseInt(PROCESSING_DELAY_MS, 10));
     channel.ack(msg);
   });
 
