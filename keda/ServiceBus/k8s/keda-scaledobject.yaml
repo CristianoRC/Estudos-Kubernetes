@@ -17,7 +17,7 @@ spec:
     name: event-processor-api
   pollingInterval: 15
   cooldownPeriod: 120
-  minReplicaCount: 1
+  minReplicaCount: 0
   maxReplicaCount: 10
   advanced:
     restoreToOriginalReplicaCount: false

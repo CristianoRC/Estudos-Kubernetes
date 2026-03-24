@@ -446,7 +446,6 @@ O projeto em [keda/ServiceBus/](./keda/ServiceBus/) demonstra um cenário comple
 - **Worker** (`BackgroundService`) que consome mensagens da subscription
 - **KEDA** que escala o Deployment de 1 a 10 réplicas com base na quantidade de mensagens pendentes
 
-> **Scale-to-zero:** O exemplo usa `minReplicaCount: 1` para manter pelo menos 1 pod sempre disponível. Porém, o grande diferencial do KEDA é permitir `minReplicaCount: 0`, onde os pods são completamente removidos quando não há mensagens na fila — economizando recursos. Quando novas mensagens chegam, o KEDA sobe os pods automaticamente. Essa abordagem é ideal para workloads esporádicos onde não faz sentido manter pods ociosos.
 
 ##### Estrutura dos manifestos (Kustomize)
 
