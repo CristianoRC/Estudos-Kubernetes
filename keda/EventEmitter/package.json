@@ -1,0 +1,16 @@
+{
+  "name": "event-emitter",
+  "version": "1.0.0",
+  "description": "Shared event emitter for KEDA scaling examples — supports Azure Service Bus and RabbitMQ",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "emit:servicebus": "node src/index.js --broker servicebus",
+    "emit:rabbitmq": "node src/index.js --broker rabbitmq"
+  },
+  "dependencies": {
+    "@azure/service-bus": "^7.9.0",
+    "amqplib": "^0.10.0",
+    "dotenv": "^16.4.0"
+  }
+}
