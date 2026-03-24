@@ -1,0 +1,40 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: rabbitmq-trigger-auth
+spec:
+  secretTargetRef:
+    - parameter: host
+      name: rabbitmq-secret
+      key: host
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: rabbitmq-consumer-scaledobject
+spec:
+  scaleTargetRef:
+    name: rabbitmq-consumer
+  pollingInterval: 10
+  cooldownPeriod: 60
+  minReplicaCount: 0
+  maxReplicaCount: 10
+  advanced:
+    restoreToOriginalReplicaCount: false
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 30
+          policies:
+            - type: Percent
+              value: 50
+              periodSeconds: 30
+  triggers:
+    - type: rabbitmq
+      metadata:
+        queueName: order-processor
+        queueLength: "5"
+        activationQueueLength: "1"
+        protocol: amqp
+      authenticationRef:
+        name: rabbitmq-trigger-auth
