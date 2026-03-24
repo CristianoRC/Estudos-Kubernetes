@@ -5,6 +5,9 @@ CLUSTER_NAME="${1:-kind}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 CLUSTER_CONFIG="$SCRIPT_DIR/cluster.yaml"
 
+INSTALL_NGINX="${INSTALL_NGINX:-false}"
+INSTALL_KEDA="${INSTALL_KEDA:-true}"
+
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
@@ -50,18 +53,26 @@ else
 fi
 
 # 3. Ingress Controller (NGINX)
-echo ""
-log "Instalando Ingress Controller (NGINX)..."
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.3/deploy/static/provider/kind/deploy.yaml > /dev/null
-wait_for_pods "ingress-nginx" "app.kubernetes.io/component=controller" 180
-log "Ingress Controller instalado"
+if [ "$INSTALL_NGINX" = "true" ]; then
+  echo ""
+  log "Instalando Ingress Controller (NGINX)..."
+  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.3/deploy/static/provider/kind/deploy.yaml > /dev/null
+  wait_for_pods "ingress-nginx" "app.kubernetes.io/component=controller" 180
+  log "Ingress Controller instalado"
+else
+  warn "Ingress NGINX — instalação desabilitada (INSTALL_NGINX=false)"
+fi
 
 # 4. KEDA
-echo ""
-log "Instalando KEDA..."
-kubectl apply --server-side --force-conflicts -f https://github.com/kedacore/keda/releases/download/v2.19.0/keda-2.19.0.yaml > /dev/null
-wait_for_pods "keda" "app=keda-operator" 180
-log "KEDA instalado"
+if [ "$INSTALL_KEDA" = "true" ]; then
+  echo ""
+  log "Instalando KEDA..."
+  kubectl apply --server-side --force-conflicts -f https://github.com/kedacore/keda/releases/download/v2.19.0/keda-2.19.0.yaml > /dev/null
+  wait_for_pods "keda" "app=keda-operator" 180
+  log "KEDA instalado"
+else
+  warn "KEDA — instalação desabilitada (INSTALL_KEDA=false)"
+fi
 
 # 5. Resumo
 echo ""
@@ -71,8 +82,8 @@ echo "=========================================="
 echo ""
 echo "Componentes instalados:"
 echo "  - Kind cluster: $CLUSTER_NAME"
-echo "  - Ingress Controller NGINX (porta 80/443 no localhost)"
-echo "  - KEDA v2.19.0 (event-driven autoscaling)"
+[ "$INSTALL_NGINX" = "true" ] && echo "  - Ingress Controller NGINX (porta 80/443 no localhost)"
+[ "$INSTALL_KEDA" = "true" ]  && echo "  - KEDA v2.19.0 (event-driven autoscaling)"
 echo ""
 echo "Próximos passos:"
 echo "  kubectl get nodes"
